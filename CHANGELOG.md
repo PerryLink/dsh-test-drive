@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] - 2026-08-16
 
 ### Added
 
@@ -16,7 +16,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Owned temp-directory discipline: `dsh-test-drive-` prefix registry, dry-run logging, quarantine-rename → delete ladder, teardown sweep.
 - Sanitizers for token literals, URL credentials, bearer headers, temp-root paths, and output tails.
 - Five-language README, cordis.patch.yml with per-key comments, CI/compat/release workflows, and the full gate chain.
-
-## [0.1.0] - unreleased
-
-_Initial development release; date stamped by `scripts/release.mjs` on first publish._
+- Issue forms (bug/feature), pull request template, and repository badges.
