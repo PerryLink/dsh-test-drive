@@ -1,0 +1,22 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+- `test_drive` tool: isolated install → dump-config → boot smoke → uninstall → cleanup pipeline for one target (repo, npm package, local path, or tarball), with a background-job branch.
+- `/testdrive` slash command: batch drive over `ctx.jobs` producing a matrix report (JSON + Markdown).
+- `drive_report` tool: fetch runs (`tdr_...`), matrices (`tdm_...`), or the latest matrix.
+- Structured result contract `dsh-test-drive/v1`: per-stage status/duration/summary fields plus an overall verdict, stored in the `test_drive` storage domain.
+- Owned temp-directory discipline: `dsh-test-drive-` prefix registry, dry-run logging, quarantine-rename → delete ladder, teardown sweep.
+- Sanitizers for token literals, URL credentials, bearer headers, temp-root paths, and output tails.
+- Five-language README, cordis.patch.yml with per-key comments, CI/compat/release workflows, and the full gate chain.
+
+## [0.1.0] - unreleased
+
+_Initial development release; date stamped by `scripts/release.mjs` on first publish._
