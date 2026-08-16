@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  gate:
     name: gate (Node ${{ matrix.node }}, ${{ matrix.os }})
     strategy:
       fail-fast: false
