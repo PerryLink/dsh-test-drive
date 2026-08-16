@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: Apache-2.0
+# dsh-test-drive bundle patch: mount the isolated install-smoke test-drive plugin.
+#
+# Every configuration key is listed below with its default, commented out —
+# uncomment only the keys you override (defaults come from the Schemastery
+# Config schema; see README § Configuration for the full table).
+- insert:
+    - id: test-drive
+      name: dsh-test-drive
+      config:
+        # Profile template initialized inside each throwaway DSH_HOME.
+        # 'headless' = base + headless bundles (boot smoke + one-shot tasks).
+        # profileName: headless
+
+        # Absolute path to a dsh executable override; empty auto-detects the
+        # `dsh` on PATH (npm shims are parsed automatically).
+        # dshBin: ""
+
+        # Headless task text for the boot-smoke stage; empty skips the stage.
+        # headlessTask: "Reply with exactly: ok"
+
+        # Environment VARIABLE NAMES (never values) forwarded from the host
+        # into test-profile child processes, e.g. DEEPSEEK_API_KEY. Default []
+        # keeps host credentials out of every tested profile.
+        # forwardEnv: []
+
+        # Whether a blocked git `prepare` build is allowlisted in the test
+        # profile's pnpm-workspace.yaml and the install retried once.
+        # allowBuilds: true
+
+        # Per-stage timeouts in milliseconds.
+        # installTimeoutMs: 600000
+        # configTimeoutMs: 60000
+        # smokeTimeoutMs: 300000
+        # uninstallTimeoutMs: 120000
+
+        # Cap on the sanitized output tail recorded per stage, in bytes.
+        # outputTailBytes: 8000
+
+        # Keep temp dirs on failure instead of quarantining them (forensics).
+        # keepTempDirs: false
+
+        # Batch limits for /testdrive.
+        # maxBatchTargets: 20
+        # batchConcurrency: 1
