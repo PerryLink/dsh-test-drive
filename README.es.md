@@ -6,6 +6,10 @@ Pruebas de instalación y arranque aisladas para complementos de [DeepSeek Harne
 
 [English](README.md) · [中文](README.zh.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
+[![ci](https://github.com/PerryLink/dsh-test-drive/actions/workflows/ci.yml/badge.svg)](https://github.com/PerryLink/dsh-test-drive/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
+[![npm downloads](https://img.shields.io/npm/dm/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
+
 ## Compatibility (Compatibilidad)
 
 | Componente | Versión |

@@ -6,6 +6,10 @@
 
 [English](README.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
+[![ci](https://github.com/PerryLink/dsh-test-drive/actions/workflows/ci.yml/badge.svg)](https://github.com/PerryLink/dsh-test-drive/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
+[![npm downloads](https://img.shields.io/npm/dm/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
+
 ## Compatibility（兼容性）
 
 | 组件 | 版本 |
