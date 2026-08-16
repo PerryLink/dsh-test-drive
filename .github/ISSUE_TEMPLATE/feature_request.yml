@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest an improvement for dsh-test-drive
+title: '[Feature] '
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What problem would this feature solve? Describe the situation, not the solution.
+      placeholder: e.g. I want to compare install results across harness versions, but each run only records one harnessVersion.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What the tool/command/report should do once implemented.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered (optional)
+      description: Workarounds or alternative designs you already evaluated.
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context (optional)
+      description: Anything else that helps — links, related issues, example reports (redact secrets first).
+    validations:
+      required: false
