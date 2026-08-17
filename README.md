@@ -1,14 +1,24 @@
-# dsh-test-drive
+<div align="center">
 
-Isolated install-and-smoke test drives for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) plugins. Given a repo or npm package, it installs the target into a **throwaway `DSH_HOME` profile**, verifies the bundle patch and boot logs, records a **structured pass/fail result**, and removes everything it created — never touching your real `~/.dsh`.
+# 🧪 dsh-test-drive
 
-**一句话定位 (中文)**: 在一次性隔离 DSH_HOME 中自动完成插件"安装 → 引导冒烟 → 卸载清理"实测并产出结构化结果矩阵。
+**Isolated install-and-smoke test drives for DeepSeek Harness plugins.**
 
-[Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md) · [中文](README.zh.md)
+*Install, smoke, verify, and clean up in a throwaway profile — your real `~/.dsh` stays untouched.*
 
-[![ci](https://github.com/PerryLink/dsh-test-drive/actions/workflows/ci.yml/badge.svg)](https://github.com/PerryLink/dsh-test-drive/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![DSH plugin](https://img.shields.io/badge/dsh-plugin-✅-green)](https://github.com/topics/dsh-plugin)
+[![Node](https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24-brightgreen.svg)](#)
+[![CI](https://img.shields.io/github/actions/workflow/status/PerryLink/dsh-test-drive/ci.yml?branch=main&label=CI)](https://github.com/PerryLink/dsh-test-drive/actions)
+[![Version](https://img.shields.io/github/v/tag/PerryLink/dsh-test-drive?label=version)](https://github.com/PerryLink/dsh-test-drive/releases)
 [![npm version](https://img.shields.io/npm/v/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
 [![npm downloads](https://img.shields.io/npm/dm/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
+
+[English](README.md) · [简体中文](README.zh.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
+
+</div>
+
+---
 
 ## Compatibility
 
