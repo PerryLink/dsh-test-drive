@@ -10,8 +10,12 @@ import { REDACTED, redactSecrets, redactTempPath, sanitizeOutput, sanitizeTarget
 
 describe('redactSecrets', () => {
   it('redacts GitHub and npm tokens', () => {
-    expect(redactSecrets('push with ghp_placeholder_removed ok')).toContain(REDACTED)
-    expect(redactSecrets('token npm_placeholder_removed end')).toContain(REDACTED)
+    // Fake tokens are built programmatically: real tokens never belong in
+    // commits, and literal pattern-shaped strings trip GitHub push protection.
+    const fakeGhp = 'ghp_' + '0'.repeat(36)
+    const fakeNpm = 'npm_' + '0'.repeat(36)
+    expect(redactSecrets(`push with ${fakeGhp} ok`)).toContain(REDACTED)
+    expect(redactSecrets(`token ${fakeNpm} end`)).toContain(REDACTED)
     expect(redactSecrets('ghp_short')).toBe('ghp_short')
   })
 
