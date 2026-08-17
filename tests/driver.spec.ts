@@ -46,7 +46,7 @@ describe('classifyTarget', () => {
     expect(classifyTarget('file:C:/p')).toBe('path')
   })
   it('classifies windows drive paths as local paths on win32', (ctx) => {
-    ctx.skipIf(process.platform !== 'win32')
+    if (process.platform !== 'win32') return ctx.skip()
     expect(classifyTarget('C:\\p\\plugin')).toBe('path')
   })
 })
@@ -83,7 +83,7 @@ describe('parseNpmShim', () => {
   ].join('\r\n')
 
   it('extracts the JS target relative to the shim directory on win32', (ctx) => {
-    ctx.skipIf(process.platform !== 'win32')
+    if (process.platform !== 'win32') return ctx.skip()
     expect(parseNpmShim('C:\\npm\\dsh.cmd', shim)).toBe(join('C:\\npm', 'node_modules', '@deepseek-ai', 'dsh', 'bin', 'dsh.js'))
   })
 
