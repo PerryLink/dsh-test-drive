@@ -4,4 +4,4 @@
  * The structured report records it as `run.pluginVersion`.
  * @module dsh-test-drive/version
  */
-export const VERSION = '0.1.0'
+export const VERSION = '0.2.0'
