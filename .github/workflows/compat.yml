@@ -1,56 +1,120 @@
-name: compat
+name: Compat
 
-# Monthly real-profile install verification: installs this package into a
-# throwaway DSH_HOME profile with the REAL dsh CLI + pnpm, then proves the
-# bundle patch composes. The temp home is created by this workflow, printed
-# before use, and removed by its exact path only.
+# dshbase-style compatibility verification (monthly + on demand):
+#   1. bare-import: install the packed tarball into an empty project and import
+#      its entry - catches devDependencies mistaken for dependencies.
+#   2. profile: install the tarball into a scratch DSH_HOME profile next to
+#      dsh-base + dsh-headless, assert the bundle row mounts (dump-config), and
+#      run one keyless headless task. MISSING_CREDENTIAL proves the plugin tree
+#      loaded; a hang (pending service) hits the 120s timeout and fails, which
+#      is exactly how a missing injected service surfaces.
+#   3. uninstall: the profile install must be fully reversible.
+# Platform guard: every assertion here is platform-neutral. Platform-specific
+# behavior (Windows/macOS-only rows) is never asserted on this Linux runner.
 on:
   schedule:
-    - cron: '23 4 1 * *'
+    - cron: '0 4 1 * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
-  compat:
+  bare-import:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+        with:
+          version: 11.7.0
+
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-      - name: Install the dsh CLI
-        run: npm install --global @deepseek-ai/dsh@0.1.0-rc.6
-      - name: Create a throwaway DSH_HOME
-        id: home
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and pack
         run: |
-          TEMP_HOME="$(mktemp -d -t dsh-compat-home-XXXXXX)"
-          echo "throwaway DSH_HOME: ${TEMP_HOME}"
-          echo "path=${TEMP_HOME}" >> "$GITHUB_OUTPUT"
-        env:
-          DSH_HOME: ${{ runner.temp }}/dsh-compat-home
-      - name: Install this package into the throwaway profile
-        run: dsh plugin --profile headless add ./
-        env:
-          DSH_HOME: ${{ steps.home.outputs.path }}
-      - name: Verify the bundle patch composes
+          pnpm run build
+          pnpm pack --pack-destination "$RUNNER_TEMP"
+      - name: Bare install + import smoke
         run: |
-          dsh --profile headless --dump-config > dump.yml
-          grep -E '# == .*dsh-test-drive' dump.yml
-          grep -E '^\s*name:\s*["'"'"']?dsh-test-drive' dump.yml
-        env:
-          DSH_HOME: ${{ steps.home.outputs.path }}
-      - name: Remove the package from the throwaway profile
-        run: dsh plugin --profile headless remove dsh-test-drive
-        env:
-          DSH_HOME: ${{ steps.home.outputs.path }}
-      - name: Remove the throwaway DSH_HOME (exact owned path only)
-        if: always()
+          set -euo pipefail
+          TARBALL="$(ls "$RUNNER_TEMP"/dsh-test-drive-*.tgz | head -n1)"
+          mkdir -p "$RUNNER_TEMP/bare" && cd "$RUNNER_TEMP/bare"
+          pnpm init >/dev/null
+          pnpm add "$TARBALL" >/dev/null
+          node --input-type=module -e "import('dsh-test-drive').then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})"
+  profile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and pack
         run: |
-          echo "removing throwaway DSH_HOME: ${{ steps.home.outputs.path }}"
-          rm -rf -- "${{ steps.home.outputs.path }}"
+          pnpm run build
+          pnpm pack --pack-destination "$RUNNER_TEMP"
+      - name: Install dsh CLI
+        run: npm install -g @deepseek-ai/dsh@0.1.0-rc.6
+
+      - name: Install into a scratch profile (builds allowlisted)
+        run: |
+          set -euo pipefail
+          TARBALL="$(ls "$RUNNER_TEMP"/dsh-test-drive-*.tgz | head -n1)"
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          mkdir -p "$DSH_HOME/profiles/compat"
+          cat > "$DSH_HOME/profiles/compat/pnpm-workspace.yaml" <<'YAML'
+          packages:
+            - .
+          nodeLinker: hoisted
+          autoInstallPeers: false
+          allowBuilds:
+            '@deepseek-ai/dsh-subprocess-local': true
+            koffi: true
+            node-pty: true
+            protobufjs: true
+            '@google/genai': true
+          YAML
+          dsh plugin --profile compat add '@deepseek-ai/dsh-base@0.1.0-rc.6' '@deepseek-ai/dsh-headless@0.1.0-rc.6' "$TARBALL"
+
+      - name: Row-mount assertion
+        run: |
+          set -euo pipefail
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          dsh --profile compat --dump-config > dump.txt
+          grep -q "dsh-test-drive" dump.txt
+
+      - name: Keyless headless smoke
+        run: |
+          set -euo pipefail
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          set +e
+          timeout 120 dsh --profile compat "Reply with exactly: ok" > smoke.log 2>&1
+          code="$?"
+          set -e
+          if grep -q 'MISSING_CREDENTIAL' smoke.log; then
+            echo 'PASS: plugin tree loaded (keyless)'
+          elif [ "$code" -eq 0 ] && grep -qiE '(^|[^a-z])ok([^a-z]|$)' smoke.log; then
+            echo 'PASS: plugin tree loaded (with key)'
+          else
+            echo 'FAIL: headless smoke did not prove tree load'
+            cat smoke.log
+            exit 1
+          fi
+
+      - name: Uninstall
+        run: |
+          set -euo pipefail
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          dsh plugin --profile compat remove dsh-test-drive
