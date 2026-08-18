@@ -32,9 +32,10 @@
 
 ## What you get（你能得到什么）
 
-- `test_drive` 工具 —— 单个目标跑完整流水线：`dsh plugin add` → `--dump-config` patch 校验 → headless 引导冒烟（FAILED 标记扫描 + 可选一句任务）→ `dsh plugin remove` → 隔离清理。同步返回结构化记录；传 `background: true` 则返回 `{ kind: 'background', jobId }`。
+- `test_drive` 工具 —— 单个目标跑完整流水线：`dsh plugin add` → `--dump-config` patch 校验 → headless 引导冒烟（FAILED 标记扫描 + 可选一句任务）→ 可选能力断言 → `dsh plugin remove` → 隔离清理。同步返回结构化记录；传 `background: true` 则返回 `{ kind: 'background', jobId }`。
 - `/testdrive` 命令 —— 把空格/逗号分隔的目标列表作为 `drive-batch` 后台任务（`ctx.jobs`）批量跑，产出矩阵报告（JSON + Markdown）。
 - `drive_report` 工具 —— 按 id 取回任意单次记录（`tdr_...`）、矩阵（`tdm_...`）或最新矩阵；以 Markdown 渲染。
+- 能力断言 —— 不止于“启动并退出”：可选的 `capability` 阶段让 agent 调用指定工具（或运行 `/command`），并核对持久会话日志确实记录了调用、观察输出包含 `expect`。干净启动只是冒烟；`observed` 才证明具名能力真实可用。
 - 结构化结果 —— 每条记录带判别符 `schema: "dsh-test-drive/v1"`，关键字段均为一级字段：`stages.install.status`（`pass`/`fail`）、`stages.smoke.status`（`pass`/`fail`/`boot-ok`/`skipped`）、各阶段 `durationMs`、脱敏后的 `summary`/`outputTail` 以及总判定 `verdict`（`pass`/`fail`/`partial`/`unknown`）。这是下游评分方（dsh-score）消费的机器可读契约。
 - 结构安全 —— 每个临时目录都由本插件以专属前缀 `dsh-test-drive-` 创建、登记在活跃所有权注册表中，且只经「dry-run → 隔离改名 → 删除」阶梯清理。宿主机 profile 永不被读取或写入。
 
@@ -82,6 +83,12 @@ dsh plugin --profile web remove dsh-test-drive  # 卸载
 | `installTimeoutMs` | `600000` | `dsh plugin add` 阶段时限。 |
 | `configTimeoutMs` | `60000` | `--dump-config` 阶段时限。 |
 | `smokeTimeoutMs` | `300000` | headless 引导冒烟阶段时限。 |
+| `capabilityTimeoutMs` | `300000` | 能力断言任务时限。
+| `capability.enabled` | `false` | 运行能力断言阶段（注册 → 调用 → 观察到）。
+| `capability.kind` | `tool` | 断言对象：`tool` 或 `command`。
+| `capability.name` | `""` | 工具或命令名（不带前导 `/`）。
+| `capability.args` | `""` | 调用文本：工具参数（JSON 风格）或命令参数。
+| `capability.expect` | `""` | 期望出现在观察输出中的字面量（不区分大小写子串）。
 | `uninstallTimeoutMs` | `120000` | `dsh plugin remove` 阶段时限。 |
 | `outputTailBytes` | `8000` | 每阶段记录的脱敏输出尾部上限（字节）。 |
 | `keepTempDirs` | `false` | 失败时保留临时目录供取证（所有权被放弃，由你清理）。 |
@@ -93,10 +100,13 @@ dsh plugin --profile web remove dsh-test-drive  # 卸载
 ### `test_drive`
 
 ```
-test_drive(target: string, headlessTask?: string, background?: boolean)
+test_drive(target: string, headlessTask?: string, background?: boolean,
+  capability?: { kind: 'tool' | 'command', name: string,
+                 args: string, expect: string })
 ```
 
 - `target` —— git 规格（`github:owner/repo#sha`、`git+https://...`）、npm 包名、本地路径或 `.tgz` 压缩包。
+- `capability` —— 冒烟后的断言：agent 以 `args` 调用 `name`（tool）或运行 `/name`（command）；阶段读取持久会话日志并要求观察输出包含 `expect`。需要 `DEEPSEEK_API_KEY`（宿主环境或 `forwardEnv`）；缺失时该阶段为 `skipped`，绝不算失败。
 - 返回完整结构化记录，样例见下。
 - `background: true` 启动一个 `drive-batch` 任务并返回其 id。
 
@@ -132,6 +142,11 @@ test_drive(target: string, headlessTask?: string, background?: boolean)
     "smoke":     { "status": "boot-ok", "exitCode": 1, "durationMs": 4123, "attempts": 1,
                    "summary": "booted without loader failures; headless task did not complete (credentials/model unreachable)",
                    "outputTail": "", "bootFailed": false, "taskCompleted": false },
+    "capability": { "status": "observed", "exitCode": 0, "durationMs": 8123, "attempts": 1,
+                    "summary": "tool \"plugin_vet\" called and its result contains the expectation",
+                    "outputTail": "", "capabilityKind": "tool", "name": "plugin_vet",
+                    "expectMatched": true,
+                    "detail": "tool \"plugin_vet\" called and its result contains the expectation" },
     "uninstall": { "status": "pass", "exitCode": 0, "durationMs": 5123, "attempts": 1,
                    "summary": "remove ok (exit 0)", "outputTail": "" },
     "cleanup":   { "status": "pass", "quarantined": true, "removed": true,
@@ -142,7 +157,7 @@ test_drive(target: string, headlessTask?: string, background?: boolean)
 }
 ```
 
-判定规则：安装失败或启动失败（`smoke.fail`）⇒ `fail`；安装通过 + patch 生效 + 启动干净（`pass`/`boot-ok`）+ 卸载通过 ⇒ `pass`；已安装但后续保证缺失 ⇒ `partial`；其余 ⇒ `unknown`。
+判定规则：安装失败、启动失败（`smoke.fail`）或能力阶段到达 `not-registered`/`failed` ⇒ `fail`；安装通过 + patch 生效 + 启动干净（`pass`/`boot-ok`）+ 卸载通过 ⇒ `pass`（`observed` 时附能力说明）；已安装但后续保证缺失 ⇒ `partial`；其余 ⇒ `unknown`。
 
 ## Permissions & data（权限与数据）
 

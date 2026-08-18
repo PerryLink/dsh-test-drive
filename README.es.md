@@ -32,9 +32,10 @@
 
 ## What you get (Qué obtienes)
 
-- Herramienta `test_drive` — un objetivo por el flujo completo: `dsh plugin add` → verificación del parche con `--dump-config` → arranque headless (escaneo de marcadores FAILED + tarea opcional de una frase) → `dsh plugin remove` → limpieza en cuarentena. Devuelve el registro estructurado de forma síncrona, o `{ kind: 'background', jobId }` con `background: true`.
+- Herramienta `test_drive` — un objetivo por el flujo completo: `dsh plugin add` → verificación del parche con `--dump-config` → arranque headless (escaneo de marcadores FAILED + tarea opcional de una frase) → aserción de capacidad opcional → `dsh plugin remove` → limpieza en cuarentena. Devuelve el registro estructurado de forma síncrona, o `{ kind: 'background', jobId }` con `background: true`.
 - Comando `/testdrive` — lote de objetivos separados por espacios/comas como tarea en segundo plano `drive-batch` sobre `ctx.jobs`, produciendo un informe matricial (JSON + Markdown).
 - Herramienta `drive_report` — recupera cualquier ejecución (`tdr_...`), matriz (`tdm_...`) o la última matriz; se renderiza en Markdown.
+- Aserción de capacidad — más allá de “arrancó y salió”: la etapa opcional `capability` hace que el agente llame a la herramienta nombrada (o ejecute `/command`) y verifica que el registro durable de sesión contenga la invocación y que la salida observada contenga `expect`. Un arranque limpio es solo una prueba de humo; `observed` demuestra que una capacidad con nombre realmente funciona.
 - Resultados estructurados — cada registro lleva el discriminador `schema: "dsh-test-drive/v1"` con campos de primera clase: `stages.install.status` (`pass`/`fail`), `stages.smoke.status` (`pass`/`fail`/`boot-ok`/`skipped`), `durationMs` por etapa, `summary`/`outputTail` saneados y un `verdict` global (`pass`/`fail`/`partial`/`unknown`). Este es el contrato legible por máquina que consumen los puntuadores (dsh-score).
 - Seguridad por construcción — cada directorio temporal lo crea este complemento bajo un prefijo dedicado `dsh-test-drive-`, se registra en un registro de propiedad activo y solo se elimina mediante la escalera dry-run → renombrado a cuarentena → borrado. El perfil del host nunca se lee ni se escribe.
 
@@ -82,6 +83,12 @@ Todas las claves son opcionales (se muestran los valores por defecto); los valor
 | `installTimeoutMs` | `600000` | Plazo de la etapa `dsh plugin add`. |
 | `configTimeoutMs` | `60000` | Plazo de la etapa `--dump-config`. |
 | `smokeTimeoutMs` | `300000` | Plazo de la etapa de arranque headless. |
+| `capabilityTimeoutMs` | `300000` | Plazo de la tarea de aserción de capacidad.
+| `capability.enabled` | `false` | Ejecuta la etapa de aserción de capacidad (registrado → invocado → observado).
+| `capability.kind` | `tool` | Qué afirmar: `tool` o `command`.
+| `capability.name` | `""` | Nombre de herramienta o comando (sin la `/` inicial).
+| `capability.args` | `""` | Texto de invocación: argumentos de herramienta (estilo JSON) o palabras del comando.
+| `capability.expect` | `""` | Literal esperado en la salida observada (subcadena sin distinción de mayúsculas).
 | `uninstallTimeoutMs` | `120000` | Plazo de la etapa `dsh plugin remove`. |
 | `outputTailBytes` | `8000` | Límite de la cola de salida saneada registrada por etapa. |
 | `keepTempDirs` | `false` | Conserva los directorios temporales ante fallos para análisis forense (se abandona la propiedad; tú limpias). |
@@ -93,10 +100,13 @@ Todas las claves son opcionales (se muestran los valores por defecto); los valor
 ### `test_drive`
 
 ```
-test_drive(target: string, headlessTask?: string, background?: boolean)
+test_drive(target: string, headlessTask?: string, background?: boolean,
+  capability?: { kind: 'tool' | 'command', name: string,
+                 args: string, expect: string })
 ```
 
 - `target` — especificación git (`github:owner/repo#sha`, `git+https://...`), nombre npm, ruta local o tarball `.tgz`.
+- `capability` — aserción posterior al arranque: el agente llama a `name` (herramienta) con `args` o ejecuta `/name` (comando); la etapa lee el registro durable de sesión y exige que la salida observada contenga `expect`. Requiere `DEEPSEEK_API_KEY` (entorno del host o `forwardEnv`); sin ella, la etapa queda `skipped`, nunca falla.
 - Devuelve el registro estructurado completo; ejemplo más abajo.
 - `background: true` inicia una tarea `drive-batch` y devuelve su id.
 
@@ -132,6 +142,11 @@ Devuelve un registro de ejecución (`tdr_...`), una matriz (`tdm_...`) o — sin
     "smoke":     { "status": "boot-ok", "exitCode": 1, "durationMs": 4123, "attempts": 1,
                    "summary": "booted without loader failures; headless task did not complete (credentials/model unreachable)",
                    "outputTail": "", "bootFailed": false, "taskCompleted": false },
+    "capability": { "status": "observed", "exitCode": 0, "durationMs": 8123, "attempts": 1,
+                    "summary": "tool \"plugin_vet\" called and its result contains the expectation",
+                    "outputTail": "", "capabilityKind": "tool", "name": "plugin_vet",
+                    "expectMatched": true,
+                    "detail": "tool \"plugin_vet\" called and its result contains the expectation" },
     "uninstall": { "status": "pass", "exitCode": 0, "durationMs": 5123, "attempts": 1,
                    "summary": "remove ok (exit 0)", "outputTail": "" },
     "cleanup":   { "status": "pass", "quarantined": true, "removed": true,
@@ -142,7 +157,7 @@ Devuelve un registro de ejecución (`tdr_...`), una matriz (`tdm_...`) o — sin
 }
 ```
 
-Reglas de veredicto: fallo de instalación o de arranque (`smoke.fail`) ⇒ `fail`; instalación aprobada + parche efectivo + arranque limpio (`pass`/`boot-ok`) + desinstalación aprobada ⇒ `pass`; instalado pero sin alguna garantía posterior ⇒ `partial`; en otro caso ⇒ `unknown`.
+Reglas de veredicto: fallo de instalación, de arranque (`smoke.fail`) o una etapa de capacidad que llegó a `not-registered`/`failed` ⇒ `fail`; instalación aprobada + parche efectivo + arranque limpio (`pass`/`boot-ok`) + desinstalación aprobada ⇒ `pass` (con nota de capacidad cuando `observed`); instalado pero sin alguna garantía posterior ⇒ `partial`; en otro caso ⇒ `unknown`.
 
 ## Permissions & data (Permisos y datos)
 

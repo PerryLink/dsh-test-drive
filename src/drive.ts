@@ -12,12 +12,15 @@
 import { randomBytes } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
 import type { Domain } from '@deepseek-ai/dsh-storage-domain'
+import { analyzeSessionLog, buildCapabilityTask } from './capability.ts'
+import type { CapabilitySpec } from './capability.ts'
 import type { ResolvedConfig } from './config.ts'
 import type { driveDomainSpec } from './domain.ts'
 import { DshDriver, classifyTarget, dumpMentionsPackage, hasBootFailure, anchorLocalTarget } from './driver.ts'
 import type { ChildRunResult } from './driver.ts'
 import { RESULT_SCHEMA, verdictOf } from './result.ts'
 import type {
+  CapabilityStageResult,
   CleanupStageResult,
   ConfigStageResult,
   DriveResult,
@@ -30,6 +33,9 @@ import { sanitizeOutput, sanitizeTarget, tailText } from './sanitize.ts'
 import { VERSION } from './version.ts'
 import { TempWorkspaceRegistry } from './workspace.ts'
 import type { TempWorkspace } from './workspace.ts'
+
+/** Cap on the session-log text the capability stage reads back. */
+export const SESSION_READ_MAX_BYTES = 1024 * 1024
 
 /** id prefix of a single drive run. */
 export const RUN_ID_PREFIX = 'tdr_'
@@ -64,6 +70,8 @@ export interface DriveOptions {
   signal?: AbortSignal | undefined
   /** Optional headless task override; empty string skips the smoke stage (config default when absent). */
   headlessTask?: string | undefined
+  /** Optional capability assertion for this drive; overrides the config block entirely. */
+  capability?: CapabilitySpec | undefined
 }
 
 /** Derive one line of batch progress from a settled result. */
@@ -159,6 +167,11 @@ export class DriveRunner {
     let install: InstallStageResult = { ...UNREACHED, allowBuildsNeeded: false }
     let configStage: ConfigStageResult = { ...UNREACHED, patchEffective: false, layers: [] }
     let smoke: SmokeStageResult = { ...UNREACHED, bootFailed: false, taskCompleted: false }
+    let capability: CapabilityStageResult = {
+      status: 'skipped', exitCode: null, durationMs: 0, attempts: 0, outputTail: '',
+      summary: 'not reached: earlier stage errored',
+      capabilityKind: null, name: '', expectMatched: false, detail: 'not reached: earlier stage errored',
+    }
     let uninstall: UninstallStageResult = { ...UNREACHED }
     let resolved: DriveResult['target']['resolved']
     let cleanup: CleanupStageResult = { status: 'fail', quarantined: false, removed: false, summary: 'cleanup not executed' }
@@ -212,6 +225,61 @@ export class DriveRunner {
         }
       }
 
+      // capability assertion (registered → invoked → observed); needs a model,
+      // so a missing credential skips instead of failing. Runs before uninstall
+      // and before the cleanup deletes the throwaway home: the durable session
+      // log is the observation surface.
+      const capSpec: CapabilitySpec | undefined = options.capability
+        ?? (config.capability.enabled
+          ? { kind: config.capability.kind, name: config.capability.name, args: config.capability.args, expect: config.capability.expect }
+          : undefined)
+      if (capSpec === undefined) {
+        capability = { ...capability, status: 'skipped', summary: 'capability assertion disabled (config.capability.enabled is false and no per-drive capability given)', detail: 'capability assertion disabled by config' }
+      } else if (install.status !== 'pass') {
+        capability = { ...capability, summary: 'install did not pass', detail: 'install did not pass' }
+      } else if (smoke.status === 'fail') {
+        capability = { ...capability, summary: 'boot smoke failed', detail: 'boot smoke failed before the capability stage' }
+      } else if (options.signal?.aborted ?? false) {
+        capability = { ...capability, summary: 'run aborted before this stage', detail: 'run aborted before this stage' }
+      } else if (process.env.DEEPSEEK_API_KEY === undefined && !config.forwardEnv.includes('DEEPSEEK_API_KEY')) {
+        capability = {
+          ...capability,
+          status: 'skipped',
+          summary: 'DEEPSEEK_API_KEY not available — the capability task needs a model (set it on the host or list it in forwardEnv)',
+          capabilityKind: capSpec.kind,
+          name: capSpec.name,
+          detail: 'no model credential available for the capability task',
+        }
+      } else {
+        const run = await driver.smokeTask(buildCapabilityTask(capSpec), { ...base, timeoutMs: config.capabilityTimeoutMs })
+        const outputTail = sanitizeOutput(`${run.stdout}\n${run.stderr}`, workspace.root, config.outputTailBytes)
+        if (run.timedOut) {
+          capability = {
+            status: 'failed', exitCode: run.exitCode, durationMs: run.durationMs, attempts: 1,
+            summary: `timed out after ${run.durationMs} ms`, outputTail,
+            capabilityKind: capSpec.kind, name: capSpec.name, expectMatched: false,
+            detail: 'capability task timed out',
+          }
+        } else if (run.exitCode !== 0) {
+          const firstLine = tailText(run.stderr || run.stdout, 160).split('\n')[0] ?? ''
+          capability = {
+            status: 'failed', exitCode: run.exitCode, durationMs: run.durationMs, attempts: 1,
+            summary: `exit ${String(run.exitCode)}: ${firstLine || 'no output'}`, outputTail,
+            capabilityKind: capSpec.kind, name: capSpec.name, expectMatched: false,
+            detail: 'capability task did not complete (model/credential failure)',
+          }
+        } else {
+          const sessionLog = await driver.readNewestSession(workspace.home, SESSION_READ_MAX_BYTES)
+          const analysis = analyzeSessionLog(sessionLog, capSpec)
+          capability = {
+            status: analysis.status, exitCode: 0, durationMs: run.durationMs, attempts: 1,
+            summary: analysis.detail, outputTail,
+            capabilityKind: capSpec.kind, name: capSpec.name, expectMatched: analysis.expectMatched,
+            detail: analysis.detail,
+          }
+        }
+      }
+
       // uninstall
       if (resolved?.packageName === undefined) {
         uninstall = { ...uninstall, summary: 'no installed package to remove' }
@@ -229,6 +297,7 @@ export class DriveRunner {
       if (install.status === 'skipped') install = { ...erroredStage(summary), allowBuildsNeeded: false }
       else if (configStage.status === 'skipped') configStage = { ...erroredStage(summary), patchEffective: false, layers: [] }
       else if (smoke.status === 'skipped') smoke = { ...erroredStage(summary), bootFailed: false, taskCompleted: false }
+      else if (capability.status === 'skipped') capability = { ...erroredStage(summary), status: 'failed' as const, capabilityKind: null, name: '', expectMatched: false, detail: summary }
       else uninstall = { ...erroredStage(summary) }
       log(`test-drive: pipeline error for ${spec}: ${String(error)}`)
     } finally {
@@ -256,7 +325,7 @@ export class DriveRunner {
       },
       target: { kind, spec: addSpec, ...resolved === undefined ? {} : { resolved } },
       isolation: { tempDshHome: true, tempWorkspace: true, tempStore: true, hostHomeTouched: false },
-      stages: { install, config: configStage, smoke, uninstall, cleanup },
+      stages: { install, config: configStage, smoke, capability, uninstall, cleanup },
       verdict: 'unknown',
       verdictReason: '',
     }

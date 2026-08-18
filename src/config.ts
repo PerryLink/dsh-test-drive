@@ -9,6 +9,14 @@
 
 import z from '@deepseek-ai/schemastery'
 
+import {
+  CAPABILITY_NAME_PATTERN,
+  MAX_CAPABILITY_ARGS_LENGTH,
+  MAX_CAPABILITY_EXPECT_LENGTH,
+  MAX_CAPABILITY_NAME_LENGTH,
+} from './capability.ts'
+import type { CapabilityKind } from './capability.ts'
+
 /** Default profile template used inside each throwaway DSH_HOME. */
 export const DEFAULT_PROFILE_NAME = 'headless'
 
@@ -26,6 +34,9 @@ export const DEFAULT_CONFIG_TIMEOUT_MS = 60_000
 
 /** Default per-stage timeout for the headless boot smoke. */
 export const DEFAULT_SMOKE_TIMEOUT_MS = 300_000
+
+/** Default per-stage timeout for the capability-assertion task. */
+export const DEFAULT_CAPABILITY_TIMEOUT_MS = 300_000
 
 /** Default per-stage timeout for `dsh plugin remove`. */
 export const DEFAULT_UNINSTALL_TIMEOUT_MS = 120_000
@@ -74,6 +85,21 @@ export interface Config {
   configTimeoutMs?: number
   /** Per-stage timeout for the headless boot smoke in milliseconds (default 300000). */
   smokeTimeoutMs?: number
+  /** Per-stage timeout for the capability-assertion task in milliseconds (default 300000). */
+  capabilityTimeoutMs?: number
+  /** Capability assertion: prove one named tool/command is registered, invoked, and observed (default disabled). */
+  capability?: {
+    /** Master switch; false (default) skips the capability stage entirely. */
+    enabled?: boolean
+    /** What to assert: a registered model tool, or a `/name` command. */
+    kind?: CapabilityKind
+    /** The tool or command name (without the leading `/`). */
+    name?: string
+    /** Invocation text: tool arguments (JSON-ish) or command words. */
+    args?: string
+    /** Literal expected in the observed output (case-insensitive substring). */
+    expect?: string
+  }
   /** Per-stage timeout for `dsh plugin remove` in milliseconds (default 120000). */
   uninstallTimeoutMs?: number
   /** Cap on the sanitized output tail recorded per stage in bytes (default 8000). */
@@ -104,6 +130,21 @@ export interface ResolvedConfig {
   configTimeoutMs: number
   /** Per-stage timeout for the headless boot smoke in milliseconds. */
   smokeTimeoutMs: number
+  /** Per-stage timeout for the capability-assertion task in milliseconds. */
+  capabilityTimeoutMs: number
+  /** Capability assertion policy: resolved defaults (disabled) or the validated spec. */
+  capability: {
+    /** Whether the capability stage runs. */
+    enabled: boolean
+    /** What to assert (tool or command). */
+    kind: CapabilityKind
+    /** The asserted tool or command name; '' while disabled. */
+    name: string
+    /** Invocation text for the asserted capability. */
+    args: string
+    /** Literal expected in the observed output. */
+    expect: string
+  }
   /** Per-stage timeout for `dsh plugin remove` in milliseconds. */
   uninstallTimeoutMs: number
   /** Cap on the sanitized output tail recorded per stage in bytes. */
@@ -126,6 +167,14 @@ export const Config: z<Config> = z.object({
   installTimeoutMs: z.number().min(MIN_STAGE_TIMEOUT_MS).max(MAX_STAGE_TIMEOUT_MS).default(DEFAULT_INSTALL_TIMEOUT_MS),
   configTimeoutMs: z.number().min(MIN_STAGE_TIMEOUT_MS).max(MAX_STAGE_TIMEOUT_MS).default(DEFAULT_CONFIG_TIMEOUT_MS),
   smokeTimeoutMs: z.number().min(MIN_STAGE_TIMEOUT_MS).max(MAX_STAGE_TIMEOUT_MS).default(DEFAULT_SMOKE_TIMEOUT_MS),
+  capabilityTimeoutMs: z.number().min(MIN_STAGE_TIMEOUT_MS).max(MAX_STAGE_TIMEOUT_MS).default(DEFAULT_CAPABILITY_TIMEOUT_MS),
+  capability: z.object({
+    enabled: z.boolean().default(false),
+    kind: z.union([z.const('tool'), z.const('command')]).default('tool' as const),
+    name: z.string().default(''),
+    args: z.string().default(''),
+    expect: z.string().default(''),
+  }).default({ enabled: false, kind: 'tool' as const, name: '', args: '', expect: '' }),
   uninstallTimeoutMs: z.number().min(MIN_STAGE_TIMEOUT_MS).max(MAX_STAGE_TIMEOUT_MS).default(DEFAULT_UNINSTALL_TIMEOUT_MS),
   outputTailBytes: z.number().min(MIN_OUTPUT_TAIL_BYTES).max(MAX_OUTPUT_TAIL_BYTES).default(DEFAULT_OUTPUT_TAIL_BYTES),
   keepTempDirs: z.boolean().default(false),
@@ -180,6 +229,27 @@ export function resolveConfig(config: Config | undefined): ResolvedConfig {
     invalid('smokeTimeoutMs', `must be a finite number between ${MIN_STAGE_TIMEOUT_MS} and ${MAX_STAGE_TIMEOUT_MS}`)
   }
 
+  const capabilityTimeoutMs = config?.capabilityTimeoutMs ?? DEFAULT_CAPABILITY_TIMEOUT_MS
+  if (!Number.isFinite(capabilityTimeoutMs) || capabilityTimeoutMs < MIN_STAGE_TIMEOUT_MS || capabilityTimeoutMs > MAX_STAGE_TIMEOUT_MS) {
+    invalid('capabilityTimeoutMs', `must be a finite number between ${MIN_STAGE_TIMEOUT_MS} and ${MAX_STAGE_TIMEOUT_MS}`)
+  }
+
+  const capabilityEnabled = config?.capability?.enabled ?? false
+  if (typeof capabilityEnabled !== 'boolean') invalid('capability.enabled', 'must be a boolean')
+  const capabilityKind = config?.capability?.kind ?? 'tool'
+  if (capabilityKind !== 'tool' && capabilityKind !== 'command') invalid('capability.kind', `must be 'tool' or 'command' (got ${JSON.stringify(capabilityKind)})`)
+  const capabilityName = config?.capability?.name ?? ''
+  const capabilityArgs = config?.capability?.args ?? ''
+  const capabilityExpect = config?.capability?.expect ?? ''
+  if (capabilityEnabled) {
+    if (capabilityName.length === 0) invalid('capability.name', 'is required when capability.enabled is true')
+    if (capabilityName.length > MAX_CAPABILITY_NAME_LENGTH || !CAPABILITY_NAME_PATTERN.test(capabilityName)) {
+      invalid('capability.name', `must be at most ${MAX_CAPABILITY_NAME_LENGTH} characters of [a-zA-Z0-9._/-] starting alphanumerically`)
+    }
+    if (capabilityArgs.length > MAX_CAPABILITY_ARGS_LENGTH) invalid('capability.args', `must be at most ${MAX_CAPABILITY_ARGS_LENGTH} characters`)
+    if (capabilityExpect.length > MAX_CAPABILITY_EXPECT_LENGTH) invalid('capability.expect', `must be at most ${MAX_CAPABILITY_EXPECT_LENGTH} characters`)
+  }
+
   const uninstallTimeoutMs = config?.uninstallTimeoutMs ?? DEFAULT_UNINSTALL_TIMEOUT_MS
   if (!Number.isFinite(uninstallTimeoutMs) || uninstallTimeoutMs < MIN_STAGE_TIMEOUT_MS || uninstallTimeoutMs > MAX_STAGE_TIMEOUT_MS) {
     invalid('uninstallTimeoutMs', `must be a finite number between ${MIN_STAGE_TIMEOUT_MS} and ${MAX_STAGE_TIMEOUT_MS}`)
@@ -212,6 +282,14 @@ export function resolveConfig(config: Config | undefined): ResolvedConfig {
     installTimeoutMs,
     configTimeoutMs,
     smokeTimeoutMs,
+    capabilityTimeoutMs,
+    capability: Object.freeze({
+      enabled: capabilityEnabled,
+      kind: capabilityKind,
+      name: capabilityName,
+      args: capabilityArgs,
+      expect: capabilityExpect,
+    }),
     uninstallTimeoutMs,
     outputTailBytes,
     keepTempDirs,

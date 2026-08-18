@@ -7,16 +7,19 @@
  * @module dsh-test-drive/report
  */
 
-import type { DriveResult, MatrixRecord, SmokeStatus, StageStatus, DriveVerdict } from './result.ts'
+import type { DriveResult, MatrixRecord, SmokeStatus, StageStatus, DriveVerdict, CapabilityStatus } from './result.ts'
 
 /** Emoji/symbol mark for a stage or verdict status. */
-export function statusMark(status: StageStatus | SmokeStatus | DriveVerdict): string {
+export function statusMark(status: StageStatus | SmokeStatus | CapabilityStatus | DriveVerdict): string {
   switch (status) {
     case 'pass': return '✅'
     case 'fail': return '❌'
     case 'boot-ok': return '🟡'
     case 'partial': return '🟠'
     case 'skipped': return '⏭️'
+    case 'observed': return '✅'
+    case 'invoked': return '🟡'
+    case 'not-registered': return '❌'
     default: return '❓'
   }
 }
@@ -46,6 +49,7 @@ export function renderDriveResult(result: DriveResult): string {
     `| install | ${statusMark(stages.install.status)} ${stages.install.status} | ${String(stages.install.exitCode)} | ${formatDuration(stages.install.durationMs)} | ${stages.install.summary} |`,
     `| config (--dump-config) | ${statusMark(stages.config.status)} ${stages.config.status} | ${String(stages.config.exitCode)} | ${formatDuration(stages.config.durationMs)} | ${stages.config.patchEffective ? `patch effective: ${stages.config.layers.join(', ')}` : stages.config.summary} |`,
     `| smoke (headless boot) | ${statusMark(stages.smoke.status)} ${stages.smoke.status} | ${String(stages.smoke.exitCode)} | ${formatDuration(stages.smoke.durationMs)} | ${stages.smoke.summary} |`,
+    `| capability | ${stages.capability === undefined ? '—' : `${statusMark(stages.capability.status)} ${stages.capability.status}`} | ${stages.capability === undefined ? '—' : String(stages.capability.exitCode)} | ${stages.capability === undefined ? '—' : formatDuration(stages.capability.durationMs)} | ${stages.capability?.summary ?? 'not asserted'} |`,
     `| uninstall | ${statusMark(stages.uninstall.status)} ${stages.uninstall.status} | ${String(stages.uninstall.exitCode)} | ${formatDuration(stages.uninstall.durationMs)} | ${stages.uninstall.summary} |`,
     `| cleanup | ${statusMark(stages.cleanup.status)} ${stages.cleanup.status} | — | — | ${stages.cleanup.summary} |`,
     '',

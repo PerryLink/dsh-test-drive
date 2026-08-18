@@ -14,6 +14,8 @@ import { defineTool } from '@deepseek-ai/dsh-tools'
 import type { ToolRunContext } from '@deepseek-ai/dsh-tools'
 import { startBatchJob } from './batch.ts'
 import type { BatchDeps } from './batch.ts'
+import { CAPABILITY_NAME_PATTERN, MAX_CAPABILITY_ARGS_LENGTH, MAX_CAPABILITY_EXPECT_LENGTH, MAX_CAPABILITY_NAME_LENGTH } from './capability.ts'
+import type { CapabilityKind } from './capability.ts'
 import { MAX_HEADLESS_TASK_LENGTH } from './config.ts'
 import type { ResolvedConfig } from './config.ts'
 import type { driveDomainSpec } from './domain.ts'
@@ -131,6 +133,21 @@ const driveResultSchema = {
             taskCompleted: { type: 'boolean' },
           },
         },
+        capability: {
+          oneOf: [
+            {
+              ...stageRecordSchema,
+              properties: {
+                ...stageRecordSchema.properties,
+                capabilityKind: { oneOf: [{ type: 'string', const: 'tool' }, { type: 'string', const: 'command' }, { type: 'null' }] },
+                name: { type: 'string' },
+                expectMatched: { type: 'boolean' },
+                detail: { type: 'string' },
+              },
+            },
+            { type: 'null' },
+          ],
+        },
         uninstall: stageRecordSchema,
         cleanup: {
           type: 'object',
@@ -219,7 +236,7 @@ function renderReport(value: DriveResult | MatrixRecord): { type: 'text'; text: 
 
 /** The deadline for one foreground drive: the sum of every stage deadline plus a buffer. */
 function driveDeadlineMs(config: ResolvedConfig): number {
-  return config.installTimeoutMs + config.configTimeoutMs + config.smokeTimeoutMs + config.uninstallTimeoutMs + 60_000
+  return config.installTimeoutMs + config.configTimeoutMs + config.smokeTimeoutMs + config.capabilityTimeoutMs + config.uninstallTimeoutMs + 60_000
 }
 
 /** Owner for a background branch; background work needs a live agent to collect it. */
@@ -244,6 +261,18 @@ export function allTools(services: ToolServices) {
         type: 'string',
         description: 'One-shot task text for the boot-smoke stage; empty string skips the smoke stage. Defaults to the plugin config.',
       },
+      capability: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Capability assertion: after the boot smoke, drive one headless task that calls the named tool (or runs the /command), then verify the durable session log records the invocation and that the observed output contains `expect`. Requires DEEPSEEK_API_KEY (host env or forwardEnv); without it the stage is skipped, never failed.',
+        properties: {
+          kind: { type: 'string', enum: ['tool', 'command'], description: 'What to assert: a registered model tool, or a /name command.' },
+          name: { type: 'string', description: 'The tool or command name (without the leading /).' },
+          args: { type: 'string', description: 'Invocation text: tool arguments (JSON-ish) or command words.' },
+          expect: { type: 'string', description: 'Literal expected in the observed output (case-insensitive substring of the logged event).' },
+        },
+      },
       background: {
         type: 'boolean',
         description: 'Run the drive as a background job and return its job id instead of waiting.',
@@ -266,9 +295,28 @@ export function allTools(services: ToolServices) {
     async execute(args, exec) {
       const target = sanitizeTarget(args.target)
       if (target.length === 0) throw new Error('dsh-test-drive: target must be a non-empty string')
-      const headlessTask = args.headlessTask
-      if (headlessTask !== undefined && headlessTask.length > MAX_HEADLESS_TASK_LENGTH) {
+      const headlessTask = (args as { headlessTask?: string | null }).headlessTask
+      if (headlessTask !== undefined && headlessTask !== null && headlessTask.length > MAX_HEADLESS_TASK_LENGTH) {
         throw new Error(`dsh-test-drive: headlessTask must be at most ${MAX_HEADLESS_TASK_LENGTH} characters`)
+      }
+      const capabilityArg = (args as { capability?: { kind?: unknown; name?: unknown; args?: unknown; expect?: unknown } }).capability
+      let capability
+      if (capabilityArg !== undefined && capabilityArg !== null) {
+        const kind = capabilityArg.kind as CapabilityKind
+        if (kind !== 'tool' && kind !== 'command') throw new Error("dsh-test-drive: capability.kind must be 'tool' or 'command'")
+        const name = capabilityArg.name
+        if (typeof name !== 'string' || name.length === 0 || name.length > MAX_CAPABILITY_NAME_LENGTH || !CAPABILITY_NAME_PATTERN.test(name)) {
+          throw new Error(`dsh-test-drive: capability.name must be at most ${MAX_CAPABILITY_NAME_LENGTH} characters of [a-zA-Z0-9._/-] starting alphanumerically`)
+        }
+        const capArgs = capabilityArg.args
+        if (typeof capArgs !== 'string' || capArgs.length > MAX_CAPABILITY_ARGS_LENGTH) {
+          throw new Error(`dsh-test-drive: capability.args must be a string of at most ${MAX_CAPABILITY_ARGS_LENGTH} characters`)
+        }
+        const expect = capabilityArg.expect
+        if (typeof expect !== 'string' || expect.length > MAX_CAPABILITY_EXPECT_LENGTH) {
+          throw new Error(`dsh-test-drive: capability.expect must be a string of at most ${MAX_CAPABILITY_EXPECT_LENGTH} characters`)
+        }
+        capability = { kind, name, args: capArgs, expect }
       }
       if (args.background === true) {
         const owner = requireOwner(exec)
@@ -276,7 +324,11 @@ export function allTools(services: ToolServices) {
         const jobId = startBatchJob(services, [target], owner, label)
         return { kind: 'background' as const, jobId: String(jobId) }
       }
-      const result = await services.runner.drive(target, { signal: exec.signal, ...headlessTask === undefined ? {} : { headlessTask } })
+      const result = await services.runner.drive(target, {
+        signal: exec.signal,
+        ...headlessTask === undefined || headlessTask === null ? {} : { headlessTask },
+        ...capability === undefined ? {} : { capability },
+      })
       // The tool contract declares `resolved` as an object-or-null field; the
       // domain record keeps it optional, so project it before returning.
       return { ...result, target: { ...result.target, resolved: result.target.resolved ?? null } }

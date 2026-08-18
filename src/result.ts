@@ -16,6 +16,8 @@
 
 import { z } from 'zod'
 
+import { CapabilityKindSchema, CapabilityStatusSchema } from './capability.ts'
+
 /** Schema discriminator of every record this plugin writes (version 1). */
 export const RESULT_SCHEMA = 'dsh-test-drive/v1' as const
 
@@ -82,6 +84,24 @@ export type SmokeStageResult = z.infer<typeof SmokeStageResultSchema>
 /** Uninstall stage result. */
 export const UninstallStageResultSchema = StageResultSchema
 export type UninstallStageResult = z.infer<typeof UninstallStageResultSchema>
+
+/** Capability-assertion stage: one named tool or command, registered → invoked → observed. */
+export const CapabilityStageResultSchema = StageResultSchema.extend({
+  /** `observed`/`invoked`/`not-registered`/`skipped`/`failed`. */
+  status: CapabilityStatusSchema,
+  /** What was asserted (tool or command); null when the stage never ran. */
+  capabilityKind: CapabilityKindSchema.nullable(),
+  /** The asserted tool or command name; '' when the stage never ran. */
+  name: z.string(),
+  /** Whether the expectation literal was found in the observed output. */
+  expectMatched: z.boolean(),
+  /** One-line sanitized explanation of the reached status. */
+  detail: z.string(),
+})
+export type CapabilityStageResult = z.infer<typeof CapabilityStageResultSchema>
+
+/** Re-export of the capability status union for stage renderers. */
+export type CapabilityStatus = z.infer<typeof CapabilityStatusSchema>
 
 /** Cleanup stage: quarantine/removal facts for the temp directory this run owned. */
 export const CleanupStageResultSchema = z.object({
@@ -163,6 +183,12 @@ export const DriveResultSchema = z.object({
     install: InstallStageResultSchema,
     config: ConfigStageResultSchema,
     smoke: SmokeStageResultSchema,
+    /**
+     * Optional capability-assertion stage (added after v1 records existed;
+     * optional so pre-capability records still validate at the durable
+     * boundary — no domain-version bump for a backward-compatible addition).
+     */
+    capability: CapabilityStageResultSchema.optional(),
     uninstall: UninstallStageResultSchema,
     cleanup: CleanupStageResultSchema,
   }),
@@ -233,7 +259,8 @@ export function totalsOf(rows: readonly MatrixRow[]): MatrixRecord['totals'] {
  * Derive the overall verdict of one drive run from its stage outcomes.
  *
  * Rules, in order:
- * 1. A failed install or a failed boot (`smoke.fail`) is a hard `fail`.
+ * 1. A failed install, a failed boot (`smoke.fail`), or a capability stage
+ *    that reached `not-registered`/`failed` is a hard `fail`.
  * 2. `pass` needs install pass + patch effective + a clean boot (`pass` or
  *    `boot-ok`) + a successful uninstall.
  * 3. `partial` covers everything that installed but missed a later assurance
@@ -244,13 +271,19 @@ export function totalsOf(rows: readonly MatrixRow[]): MatrixRecord['totals'] {
  * @returns `[verdict, reason]`.
  */
 export function verdictOf(result: DriveResult): [verdict: DriveVerdict, reason: string] {
-  const { install, config, smoke, uninstall } = result.stages
+  const { install, config, smoke, uninstall, capability } = result.stages
   if (install.status === 'fail') return ['fail', `install failed: ${install.summary}`]
   if (smoke.status === 'fail') return ['fail', `boot smoke failed: ${smoke.summary}`]
+  if (capability !== undefined && (capability.status === 'not-registered' || capability.status === 'failed')) {
+    return ['fail', `capability assertion failed (${capability.name}): ${capability.detail}`]
+  }
   if (install.status === 'pass' && config.status === 'pass' && config.patchEffective
     && (smoke.status === 'pass' || smoke.status === 'boot-ok') && uninstall.status === 'pass') {
-    if (smoke.status === 'boot-ok') return ['pass', 'install, patch, boot, and uninstall verified; headless task inconclusive (see smoke.summary)']
-    return ['pass', 'install, patch, boot, task, and uninstall all verified']
+    const capabilityNote = capability !== undefined && capability.status === 'observed'
+      ? `; capability "${capability.name}" registered, invoked, and observed`
+      : ''
+    if (smoke.status === 'boot-ok') return ['pass', `install, patch, boot, and uninstall verified${capabilityNote}; headless task inconclusive (see smoke.summary)`]
+    return ['pass', `install, patch, boot, task, and uninstall all verified${capabilityNote}`]
   }
   if (install.status !== 'pass') return ['unknown', 'install never ran to completion']
   if (config.status !== 'pass' || !config.patchEffective) {

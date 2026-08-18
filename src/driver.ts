@@ -9,7 +9,7 @@
  * @module dsh-test-drive/driver
  */
 
-import { access, readFile, writeFile, mkdir } from 'node:fs/promises'
+import { access, readFile, readdir, stat, writeFile, mkdir } from 'node:fs/promises'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 import type { SubprocessSpawnSpec } from '@deepseek-ai/dsh-subprocess'
@@ -316,6 +316,43 @@ export class DshDriver {
   /** Run the boot-smoke stage: `dsh --profile <name> <task>`. */
   async smokeTask(task: string, options: StageRunOptions): Promise<ChildRunResult> {
     return this.run(['--profile', this.deps.config.profileName, task], options)
+  }
+
+  /**
+   * Read the newest durable session log from a throwaway home's session store.
+   * Used by the capability stage to observe what the headless task actually
+   * did (tool calls, command replies). Tolerant by contract: a missing or
+   * empty store yields '' so the stage degrades instead of throwing.
+   *
+   * @param home - the throwaway DSH_HOME.
+   * @param maxBytes - cap on the returned text (tail end kept).
+   * @returns the newest session file's text, or '' when none exists.
+   */
+  async readNewestSession(home: string, maxBytes: number): Promise<string> {
+    let entries: string[]
+    try {
+      entries = await readdir(join(home, 'sessions'))
+    } catch {
+      return ''
+    }
+    let newest: { path: string; mtimeMs: number } | undefined
+    for (const entry of entries) {
+      if (!/\.jsonl$/u.test(entry)) continue
+      const path = join(home, 'sessions', entry)
+      try {
+        const info = await stat(path)
+        if (info.isFile() && (newest === undefined || info.mtimeMs > newest.mtimeMs)) newest = { path, mtimeMs: info.mtimeMs }
+      } catch {
+        // Vanished between listing and stat — the next entry may still be valid.
+      }
+    }
+    if (newest === undefined) return ''
+    try {
+      const text = await readFile(newest.path, 'utf8')
+      return text.length <= maxBytes ? text : text.slice(text.length - maxBytes)
+    } catch {
+      return ''
+    }
   }
 
   /** Run the uninstall stage: `dsh plugin --profile <name> remove <pkg>`. */

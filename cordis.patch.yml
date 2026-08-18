@@ -32,7 +32,21 @@
         # installTimeoutMs: 600000
         # configTimeoutMs: 60000
         # smokeTimeoutMs: 300000
+        # capabilityTimeoutMs: 300000
         # uninstallTimeoutMs: 120000
+
+        # Capability assertion (registered -> invoked -> observed): after the
+        # boot smoke, drive one headless task that calls a named tool (or runs
+        # a /command) and verify the durable session log records the invocation
+        # and the observed output contains `expect`. Requires DEEPSEEK_API_KEY
+        # (host env or forwardEnv); without it the stage is skipped, never
+        # failed. Off by default.
+        # capability:
+        #   enabled: false
+        #   kind: tool          # 'tool' or 'command'
+        #   name: ""            # tool or command name (no leading /)
+        #   args: ""            # tool arguments (JSON-ish) or command words
+        #   expect: ""          # literal expected in the observed output
 
         # Cap on the sanitized output tail recorded per stage, in bytes.
         # outputTailBytes: 8000

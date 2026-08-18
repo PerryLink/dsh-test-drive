@@ -32,10 +32,11 @@
 
 ## What you get
 
-- `test_drive` tool — one target through the complete pipeline: `dsh plugin add` → `--dump-config` patch check → headless boot smoke (FAILED-marker scan + optional one-shot task) → `dsh plugin remove` → quarantined cleanup. Returns the structured record synchronously, or `{ kind: 'background', jobId }` with `background: true`.
+- `test_drive` tool — one target through the complete pipeline: `dsh plugin add` → `--dump-config` patch check → headless boot smoke (FAILED-marker scan + optional one-shot task) → optional capability assertion → `dsh plugin remove` → quarantined cleanup. Returns the structured record synchronously, or `{ kind: 'background', jobId }` with `background: true`.
 - `/testdrive` command — batch drive of a whitespace/comma-separated target list as a `drive-batch` background job over `ctx.jobs`, producing a matrix report (JSON + Markdown).
 - `drive_report` tool — fetch any stored run (`tdr_...`), matrix (`tdm_...`), or the latest matrix; rendered as Markdown.
-- Structured results — every record carries the discriminator `schema: "dsh-test-drive/v1"` with first-class fields: `stages.install.status` (`pass`/`fail`), `stages.smoke.status` (`pass`/`fail`/`boot-ok`/`skipped`), per-stage `durationMs`, sanitized `summary`/`outputTail`, and an overall `verdict` (`pass`/`fail`/`partial`/`unknown`). This is the machine-readable contract downstream scorers (dsh-score) consume.
+- Capability assertion — beyond "booted and exited": the optional `capability` stage drives one headless task that calls a named tool (or runs a `/command`) and verifies the durable session log recorded the invocation and the observed output contains `expect`. A clean boot is only a smoke test; `observed` proves a named capability really works.
+- Structured results — every record carries the discriminator `schema: "dsh-test-drive/v1"` with first-class fields: `stages.install.status` (`pass`/`fail`), `stages.smoke.status` (`pass`/`fail`/`boot-ok`/`skipped`), `stages.capability.status` (`observed`/`invoked`/`not-registered`/`skipped`/`failed`), per-stage `durationMs`, sanitized `summary`/`outputTail`, and an overall `verdict` (`pass`/`fail`/`partial`/`unknown`). This is the machine-readable contract downstream scorers (dsh-score) consume.
 - Safety by construction — every temp directory is created by this plugin under a dedicated `dsh-test-drive-` prefix, tracked in a live ownership registry, and removed only through a dry-run → quarantine-rename → delete ladder. The host profile is never read or written.
 
 ## Quick start
@@ -82,6 +83,12 @@ All keys are optional (defaults shown); invalid values fail loudly at load.
 | `installTimeoutMs` | `600000` | `dsh plugin add` stage deadline. |
 | `configTimeoutMs` | `60000` | `--dump-config` stage deadline. |
 | `smokeTimeoutMs` | `300000` | Headless boot-smoke stage deadline. |
+| `capabilityTimeoutMs` | `300000` | Capability-assertion task deadline. |
+| `capability.enabled` | `false` | Run the capability-assertion stage (registered → invoked → observed). |
+| `capability.kind` | `tool` | What to assert: `tool` or `command`. |
+| `capability.name` | `""` | Tool or command name (no leading `/`). |
+| `capability.args` | `""` | Invocation text: tool arguments (JSON-ish) or command words. |
+| `capability.expect` | `""` | Literal expected in the observed output (case-insensitive substring). |
 | `uninstallTimeoutMs` | `120000` | `dsh plugin remove` stage deadline. |
 | `outputTailBytes` | `8000` | Cap on the sanitized output tail recorded per stage. |
 | `keepTempDirs` | `false` | Keep temp dirs on failure for forensics (ownership is dropped; you clean up). |
@@ -93,10 +100,13 @@ All keys are optional (defaults shown); invalid values fail loudly at load.
 ### `test_drive`
 
 ```
-test_drive(target: string, headlessTask?: string, background?: boolean)
+test_drive(target: string, headlessTask?: string, background?: boolean,
+           capability?: { kind: 'tool' | 'command', name: string,
+                          args: string, expect: string })
 ```
 
 - `target` — git spec (`github:owner/repo#sha`, `git+https://...`), npm name, local path, or `.tgz` tarball.
+- `capability` — assertion after the boot smoke: the agent calls `name` (tool) or runs `/name` (command) with `args`; the stage reads the durable session log and requires the observed output to contain `expect`. Needs `DEEPSEEK_API_KEY` (host env or `forwardEnv`); without it the stage is `skipped`, never failed.
 - Returns the full structured record; see the sample below.
 - `background: true` starts a `drive-batch` job and returns its id.
 
@@ -132,6 +142,11 @@ Returns a run record (`tdr_...`), a matrix (`tdm_...`), or — with no id — th
     "smoke":     { "status": "boot-ok", "exitCode": 1, "durationMs": 4123, "attempts": 1,
                    "summary": "booted without loader failures; headless task did not complete (credentials/model unreachable)",
                    "outputTail": "", "bootFailed": false, "taskCompleted": false },
+    "capability": { "status": "observed", "exitCode": 0, "durationMs": 8123, "attempts": 1,
+                    "summary": "tool \"plugin_vet\" called and its result contains the expectation",
+                    "outputTail": "", "capabilityKind": "tool", "name": "plugin_vet",
+                    "expectMatched": true,
+                    "detail": "tool \"plugin_vet\" called and its result contains the expectation" },
     "uninstall": { "status": "pass", "exitCode": 0, "durationMs": 5123, "attempts": 1,
                    "summary": "remove ok (exit 0)", "outputTail": "" },
     "cleanup":   { "status": "pass", "quarantined": true, "removed": true,
@@ -142,7 +157,7 @@ Returns a run record (`tdr_...`), a matrix (`tdm_...`), or — with no id — th
 }
 ```
 
-Verdict rules: install failure or boot failure (`smoke.fail`) ⇒ `fail`; install pass + patch effective + clean boot (`pass`/`boot-ok`) + uninstall pass ⇒ `pass`; anything installed but missing a later assurance ⇒ `partial`; otherwise `unknown`.
+Verdict rules: install failure, boot failure (`smoke.fail`), or a capability stage that reached `not-registered`/`failed` ⇒ `fail`; install pass + patch effective + clean boot (`pass`/`boot-ok`) + uninstall pass ⇒ `pass` (with a capability note when `observed`); anything installed but missing a later assurance ⇒ `partial`; otherwise `unknown`.
 
 ## Permissions & data
 

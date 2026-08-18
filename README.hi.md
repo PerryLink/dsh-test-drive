@@ -32,9 +32,10 @@
 
 ## What you get (आपको क्या मिलता है)
 
-- `test_drive` उपकरण — एक लक्ष्य को पूरी पाइपलाइन से गुज़ारता है: `dsh plugin add` → `--dump-config` पैच जाँच → हेडलेस बूट स्मोक (FAILED मार्कर स्कैन + वैकल्पिक एक-वाक्य कार्य) → `dsh plugin remove` → क्वारंटीन सफ़ाई। संरचित रिकॉर्ड समकालिक रूप से लौटाता है, या `background: true` पर `{ kind: 'background', jobId }`।
+- `test_drive` उपकरण — एक लक्ष्य को पूरी पाइपलाइन से गुज़ारता है: `dsh plugin add` → `--dump-config` पैच जाँच → हेडलेस बूट स्मोक (FAILED मार्कर स्कैन + वैकल्पिक एक-वाक्य कार्य) → वैकल्पिक क्षमता-पुष्टि → `dsh plugin remove` → क्वारंटीन सफ़ाई। संरचित रिकॉर्ड समकालिक रूप से लौटाता है, या `background: true` पर `{ kind: 'background', jobId }`।
 - `/testdrive` कमांड — स्पेस/कॉमा से अलग किए गए लक्ष्यों की सूची को `ctx.jobs` पर `drive-batch` पृष्ठभूमि कार्य के रूप में चलाकर मैट्रिक्स रिपोर्ट (JSON + Markdown) बनाता है।
 - `drive_report` उपकरण — किसी भी रन (`tdr_...`), मैट्रिक्स (`tdm_...`) या नवीनतम मैट्रिक्स को लाता है; Markdown में प्रस्तुत होता है।
+- क्षमता-पुष्टि — “बूट हुआ और बाहर निकला” से आगे: वैकल्पिक `capability` चरण एजेंट से नामित उपकरण को बुलवाता है (या `/command` चलवाता है) और टिकाऊ सत्र लॉग में आह्वान तथा `expect` वाला प्रेक्षित आउटपुट सत्यापित करता है। साफ़ बूट केवल स्मोक टेस्ट है; `observed` सिद्ध करता है कि नामित क्षमता सचमुच काम करती है।
 - संरचित परिणाम — हर रिकॉर्ड में विभेदक `schema: "dsh-test-drive/v1"` और प्रथम-श्रेणी फ़ील्ड होते हैं: `stages.install.status` (`pass`/`fail`), `stages.smoke.status` (`pass`/`fail`/`boot-ok`/`skipped`), प्रति-चरण `durationMs`, सैनिटाइज़ किए गए `summary`/`outputTail`, और समग्र `verdict` (`pass`/`fail`/`partial`/`unknown`)। यही मशीन-पठनीय अनुबंध है जिसे स्कोरिंग पाइपलाइनें (dsh-score) उपभोग करती हैं।
 - निर्माण से सुरक्षा — हर अस्थायी निर्देशिका इस प्लगइन द्वारा समर्पित उपसर्ग `dsh-test-drive-` के तहत बनाई जाती है, एक सक्रिय स्वामित्व रजिस्ट्री में दर्ज होती है, और केवल dry-run → क्वारंटीन-नामांतरण → हटाने की सीढ़ी से हटाई जाती है। होस्ट प्रोफ़ाइल कभी पढ़ी या लिखी नहीं जाती।
 
@@ -82,6 +83,12 @@ dsh plugin --profile web remove dsh-test-drive  # अनइंस्टॉल
 | `installTimeoutMs` | `600000` | `dsh plugin add` चरण की समय-सीमा। |
 | `configTimeoutMs` | `60000` | `--dump-config` चरण की समय-सीमा। |
 | `smokeTimeoutMs` | `300000` | हेडलेस बूट-स्मोक चरण की समय-सीमा। |
+| `capabilityTimeoutMs` | `300000` | क्षमता-पुष्टि कार्य की समय-सीमा।
+| `capability.enabled` | `false` | क्षमता-पुष्टि चरण चलाएँ (पंजीकृत → आहूत → प्रेक्षित)।
+| `capability.kind` | `tool` | क्या जाँचें: `tool` या `command`।
+| `capability.name` | `""` | उपकरण या कमांड नाम (आगे `/` के बिना)।
+| `capability.args` | `""` | आह्वान पाठ: उपकरण तर्क (JSON-शैली) या कमांड शब्द।
+| `capability.expect` | `""` | प्रेक्षित आउटपुट में अपेक्षित अक्षर (केस-असंवेदी उप-स्ट्रिंग)।
 | `uninstallTimeoutMs` | `120000` | `dsh plugin remove` चरण की समय-सीमा। |
 | `outputTailBytes` | `8000` | प्रति चरण दर्ज सैनिटाइज़्ड आउटपुट टेल की सीमा। |
 | `keepTempDirs` | `false` | विफलता पर फ़ॉरेंसिक हेतु अस्थायी निर्देशिकाएँ रखें (स्वामित्व छोड़ा जाता है; आप साफ़ करें)। |
@@ -93,10 +100,13 @@ dsh plugin --profile web remove dsh-test-drive  # अनइंस्टॉल
 ### `test_drive`
 
 ```
-test_drive(target: string, headlessTask?: string, background?: boolean)
+test_drive(target: string, headlessTask?: string, background?: boolean,
+  capability?: { kind: 'tool' | 'command', name: string,
+                 args: string, expect: string })
 ```
 
 - `target` — git स्पेक (`github:owner/repo#sha`, `git+https://...`), npm नाम, स्थानीय पथ या `.tgz` टारबॉल।
+- `capability` — स्मोक के बाद की पुष्टि: एजेंट `args` के साथ `name` (उपकरण) बुलाता है या `/name` (कमांड) चलाता है; चरण टिकाऊ सत्र लॉग पढ़कर `expect` वाला प्रेक्षित आउटपुट माँगता है। `DEEPSEEK_API_KEY` चाहिए (होस्ट परिवेश या `forwardEnv`); बिना उसके चरण `skipped` रहता है, कभी विफल नहीं होता।
 - पूरा संरचित रिकॉर्ड लौटाता है; नमूना नीचे।
 - `background: true` एक `drive-batch` कार्य आरंभ कर उसका id लौटाता है।
 
@@ -132,6 +142,11 @@ test_drive(target: string, headlessTask?: string, background?: boolean)
     "smoke":     { "status": "boot-ok", "exitCode": 1, "durationMs": 4123, "attempts": 1,
                    "summary": "booted without loader failures; headless task did not complete (credentials/model unreachable)",
                    "outputTail": "", "bootFailed": false, "taskCompleted": false },
+    "capability": { "status": "observed", "exitCode": 0, "durationMs": 8123, "attempts": 1,
+                    "summary": "tool \"plugin_vet\" called and its result contains the expectation",
+                    "outputTail": "", "capabilityKind": "tool", "name": "plugin_vet",
+                    "expectMatched": true,
+                    "detail": "tool \"plugin_vet\" called and its result contains the expectation" },
     "uninstall": { "status": "pass", "exitCode": 0, "durationMs": 5123, "attempts": 1,
                    "summary": "remove ok (exit 0)", "outputTail": "" },
     "cleanup":   { "status": "pass", "quarantined": true, "removed": true,
@@ -142,7 +157,7 @@ test_drive(target: string, headlessTask?: string, background?: boolean)
 }
 ```
 
-निर्णय नियम: इंस्टॉल विफलता या बूट विफलता (`smoke.fail`) ⇒ `fail`; इंस्टॉल पास + पैच प्रभावी + साफ़ बूट (`pass`/`boot-ok`) + अनइंस्टॉल पास ⇒ `pass`; इंस्टॉल हुआ पर बाद की कोई पुष्टि अधूरी ⇒ `partial`; अन्यथा ⇒ `unknown`।
+निर्णय नियम: इंस्टॉल विफलता, बूट विफलता (`smoke.fail`) या `not-registered`/`failed` तक पहुँचा क्षमता चरण ⇒ `fail`; इंस्टॉल पास + पैच प्रभावी + साफ़ बूट (`pass`/`boot-ok`) + अनइंस्टॉल पास ⇒ `pass` (`observed` पर क्षमता नोट के साथ); इंस्टॉल हुआ पर बाद की कोई पुष्टि अधूरी ⇒ `partial`; अन्यथा ⇒ `unknown`।
 
 ## Permissions & data (अनुमतियाँ और डेटा)
 
