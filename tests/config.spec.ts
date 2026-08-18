@@ -105,4 +105,21 @@ describe('resolveConfig fails loud', () => {
   it('rejects a headless task longer than the cap', () => {
     expect(() => resolveConfig({ headlessTask: 'x'.repeat(2_001) })).toThrow(/config\.headlessTask/)
   })
+
+  it('rejects a capability assertion enabled without a name', () => {
+    expect(() => resolveConfig({ capability: { enabled: true, name: '' } })).toThrow(/config\.capability\.name/)
+  })
+
+  it('rejects an invalid capability kind', () => {
+    expect(() => resolveConfig({ capability: { kind: 'bogus' } as never })).toThrow(/config\.capability\.kind/)
+  })
+
+  it('rejects a capability name that does not start alphanumerically', () => {
+    expect(() => resolveConfig({ capability: { enabled: true, name: '-bad' } })).toThrow(/config\.capability\.name/)
+  })
+
+  it('rejects capability args/expect beyond their length caps', () => {
+    expect(() => resolveConfig({ capability: { enabled: true, name: 'tool', args: 'x'.repeat(4_001) } })).toThrow(/config\.capability\.args/)
+    expect(() => resolveConfig({ capability: { enabled: true, name: 'tool', expect: 'x'.repeat(2_001) } })).toThrow(/config\.capability\.expect/)
+  })
 })

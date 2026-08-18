@@ -14,6 +14,7 @@ import { join } from 'node:path'
 import { CallId } from '@deepseek-ai/dsh-llm'
 import { afterAll, describe, expect, it } from 'vitest'
 import { mountHarness, type Harness } from './harness.ts'
+import { VERSION } from '../src/version.ts'
 
 const e2e = process.env.DSH_TESTDRIVE_E2E === '1' ? describe : describe.skip
 
@@ -64,7 +65,10 @@ e2e('real CLI', () => {
     expect((target.resolved as Record<string, unknown>).hasBundleManifest).toBe(true)
     const run = value.run as Record<string, unknown>
     expect(run.harnessVersion).toBe('0.1.0-rc.6')
-    expect(run.pluginVersion).toBe('0.1.0')
+    // The producer version lives in src/version.ts (lockstep with
+    // package.json via scripts/release.mjs); hardcoding it here broke when
+    // the package moved 0.1.0 → 0.2.0.
+    expect(run.pluginVersion).toBe(VERSION)
     expect(await ownedLeftovers()).toEqual([])
   }, 900_000)
 
