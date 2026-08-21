@@ -11,7 +11,7 @@ Standalone DeepSeek Harness plugin repository (`dsh-test-drive`). Development fo
 - `src/workspace.ts` — temp-directory ownership (§0.2 discipline): `mkdtemp` roots under the OS temp dir with the `dsh-test-drive-` prefix, a live registry, dry-run logging before any mutation, and the quarantine-rename → delete cleanup ladder. `assertOwned` refuses anything that is not a registered direct child of the OS temp dir with the owned prefix.
 - `src/driver.ts` — the `dsh` CLI driver: config-override/PATH/npm-shim location, argv-only spawning (never a shell — hostile specs stay argv entries), the allowBuilds retry, dump-layer parsing, and boot-failure markers.
 - `src/drive.ts` — the single-target pipeline; cleanup runs in a `finally` on success, failure, timeout, and abort. `src/batch.ts` — the `drive-batch` job producer over `ctx.jobs`. `src/tools.ts` / `src/command.ts` — the two tools and `/testdrive`.
-- `tests/` — vitest; real Cordis `Context` + real `SessionStore`/`Session`/`ToolRuntime`/`AgentRegistry`/`LocalJobRegistry`/`Storage`+`DomainFacility` from the `0.1.0-rc.6` peers; the subprocess provider is a scripted subclass of the REAL `SubprocessRuntime` (or the real `LocalSubprocessRuntime` in `e2e.spec.ts`).
+- `tests/` — vitest; real Cordis `Context` + real `SessionStore`/`Session`/`ToolRuntime`/`AgentRegistry`/`LocalJobRegistry`/`Storage`+`DomainFacility` from the `0.1.0-rc.8` peers; the subprocess provider is a scripted subclass of the REAL `SubprocessRuntime` (or the real `LocalSubprocessRuntime` in `e2e.spec.ts`).
 
 ## Hard rules applied here
 
@@ -27,7 +27,7 @@ Standalone DeepSeek Harness plugin repository (`dsh-test-drive`). Development fo
 
 `pnpm run typecheck && pnpm run typecheck:ci && pnpm test && pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack`
 
-- `typecheck` resolves `@deepseek-ai/*` through tsconfig paths to the local harness checkout; `typecheck:ci` clears the paths and checks against the published `0.1.0-rc.6` types. Both must stay green.
+- `typecheck` resolves `@deepseek-ai/*` through tsconfig paths to the local harness checkout; `typecheck:ci` clears the paths and checks against the published `0.1.0-rc.8` types. Both must stay green.
 - `test` runs the scripted suites (fileParallelism off: leftover-scan assertions observe the shared OS temp dir). Real-CLI evidence: `DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` (needs network + `dsh`/`pnpm` on PATH) — this drives the package's own checkout through the real loop.
 - `verify:artifacts` proves the tarball's ESM face imports under plain Node and the bundle patch ships.
 

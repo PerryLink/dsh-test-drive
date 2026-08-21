@@ -24,7 +24,7 @@
 
 | घटक | संस्करण |
 |---|---|
-| DeepSeek Harness | `0.1.0-rc.6` (peer निर्भरताएँ पिन की गईं) |
+| DeepSeek Harness | `0.1.0-rc.8` (peer निर्भरताएँ ≥ 0.1.0-rc.8) |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | पैकेज प्रबंधक | `pnpm@11.7.0` |
 | प्लेटफ़ॉर्म | Windows / macOS / Linux (केवल host प्लगइन) |
@@ -125,7 +125,7 @@ test_drive(target: string, headlessTask?: string, background?: boolean,
   "schema": "dsh-test-drive/v1",
   "run": { "runId": "tdr_9f2c...", "startedAt": "2026-08-16T00:00:00.000Z",
            "finishedAt": "2026-08-16T00:00:45.120Z", "durationMs": 45120,
-           "harnessVersion": "0.1.0-rc.6", "pluginVersion": "0.1.0",
+           "harnessVersion": "0.1.0-rc.8", "pluginVersion": "0.1.0",
            "platform": "win32", "node": "v22.22.3" },
   "target": { "kind": "repo", "spec": "github:owner/dsh-click#abc123",
               "resolved": { "packageName": "dsh-click", "packageVersion": "0.1.0",
@@ -190,7 +190,7 @@ pnpm run typecheck && pnpm run typecheck:ci && pnpm test
 pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack
 ```
 
-- `typecheck` स्थानीय harness चेकआउट से `@deepseek-ai/*` हल करता है; `typecheck:ci` प्रकाशित `0.1.0-rc.6` प्रकारों से जाँचता है।
+- `typecheck` स्थानीय harness चेकआउट से `@deepseek-ai/*` हल करता है; `typecheck:ci` प्रकाशित `0.1.0-rc.8` प्रकारों से जाँचता है।
 - परीक्षण वास्तविक `Context`/`Session`/`ToolRuntime`/`LocalJobRegistry`/स्टोरेज स्टैक और एक स्क्रिप्टेड subprocess प्रदाता का उपयोग करते हैं।
 - वास्तविक-CLI एंड-टू-एंड (नेटवर्क + PATH पर `dsh` आवश्यक): `DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` — इसी पैकेज के चेकआउट को वास्तविक इंस्टॉल-स्मोक लूप से परखता है।
 - रिलीज़: `node scripts/release.mjs <x.y.z>` (संस्करण बढ़ाता, CHANGELOG मुहर लगाता, द्वार फिर चलाता, commit + tag; कभी push नहीं)।

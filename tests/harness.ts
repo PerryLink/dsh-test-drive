@@ -1,7 +1,7 @@
 /**
  * Shared test harness: REAL Cordis `Context`, REAL `SessionStore`/`Session`,
  * REAL `ToolRuntime`, REAL `LocalJobRegistry`, REAL `Storage` hub + `DomainFacility`
- * from the 0.1.0-rc.6 peers — plus a scriptable subprocess provider (a subclass
+ * from the 0.1.0-rc.8 peers — plus a scriptable subprocess provider (a subclass
  * of the REAL `SubprocessRuntime`), a memory storage backend, a structural
  * commands registry, and a structurally complete fake agent. The CLI process
  * work is scripted data; the plugin contract, tool pipeline, job lifecycle,
