@@ -64,7 +64,7 @@ e2e('real CLI', () => {
     expect((target.resolved as Record<string, unknown>).packageName).toBe('dsh-test-drive')
     expect((target.resolved as Record<string, unknown>).hasBundleManifest).toBe(true)
     const run = value.run as Record<string, unknown>
-    expect(run.harnessVersion).toBe('0.1.0-rc.6')
+    expect(run.harnessVersion).toBe('0.1.0-rc.8')
     // The producer version lives in src/version.ts (lockstep with
     // package.json via scripts/release.mjs); hardcoding it here broke when
     // the package moved 0.1.0 → 0.2.0.
