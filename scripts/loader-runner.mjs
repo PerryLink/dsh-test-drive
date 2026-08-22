@@ -68,7 +68,7 @@ try {
   if (descriptor === undefined) {
     throw new Error('Loader composition: /testdrive command is missing')
   }
-  // rc.8 commands.execute gains the images parameter (durable attachments);
+  // rc.2 commands.execute gains the images parameter (durable attachments);
   // plain invocations pass the empty list.
   const execution = await ctx.commands.execute(agent, '/testdrive', [], new AbortController().signal)
   const text = execution?.result?.text ?? ''

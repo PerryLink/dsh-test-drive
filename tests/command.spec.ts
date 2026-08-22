@@ -56,7 +56,7 @@ function invocation(rawInput: string, harness: Harness): CommandInvocation {
     commandId: CommandId('cmd-test'),
     agent: harness.agent,
     rawInput,
-    // rc.8 CommandInvocation gains the durable attachments field; this plugin's
+    // rc.2 CommandInvocation gains the durable attachments field; this plugin's
     // handler never consumes images, so fixtures pass the frozen empty list.
     attachments: [],
     signal: new AbortController().signal,

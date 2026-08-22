@@ -7,7 +7,7 @@ import {
   escapeRegex,
 } from '../src/capability.ts'
 
-/** One durable session-log line in the rc.8 JSONL shape. */
+/** One durable session-log line in the rc.2 JSONL shape. */
 function line(type: string, data: unknown): string {
   return JSON.stringify({ type, data })
 }
