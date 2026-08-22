@@ -1,6 +1,7 @@
 <div align="center">
 
 # 🧪 dsh-test-drive
+[![Gitee](https://img.shields.io/badge/Gitee-mirror-c71d23?logo=gitee)](https://gitee.com/perrylink/dsh-test-drive)
 
 **Isolated install-and-smoke test drives for DeepSeek Harness plugins.**
 
