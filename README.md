@@ -25,7 +25,7 @@
 
 | Component | Version |
 |---|---|
-| DeepSeek Harness | `0.1.0-rc.8` (peer dependencies ≥ 0.1.0-rc.8) |
+| DeepSeek Harness | `0.1.1-rc.2` (peer dependencies ≥ 0.1.0-rc.8) |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Package manager | `pnpm@11.7.0` |
 | Platform | Windows / macOS / Linux (host-only plugin) |
@@ -126,7 +126,7 @@ Returns a run record (`tdr_...`), a matrix (`tdm_...`), or — with no id — th
   "schema": "dsh-test-drive/v1",
   "run": { "runId": "tdr_9f2c...", "startedAt": "2026-08-16T00:00:00.000Z",
            "finishedAt": "2026-08-16T00:00:45.120Z", "durationMs": 45120,
-           "harnessVersion": "0.1.0-rc.8", "pluginVersion": "0.1.0",
+           "harnessVersion": "0.1.1-rc.2", "pluginVersion": "0.1.0",
            "platform": "win32", "node": "v22.22.3" },
   "target": { "kind": "repo", "spec": "github:owner/dsh-click#abc123",
               "resolved": { "packageName": "dsh-click", "packageVersion": "0.1.0",
@@ -191,7 +191,7 @@ pnpm run typecheck && pnpm run typecheck:ci && pnpm test
 pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack
 ```
 
-- `typecheck` resolves `@deepseek-ai/*` through the local harness checkout; `typecheck:ci` checks against the published `0.1.0-rc.8` types.
+- `typecheck` resolves `@deepseek-ai/*` through the local harness checkout; `typecheck:ci` checks against the published `0.1.1-rc.2` types.
 - Tests use the real `Context`/`Session`/`ToolRuntime`/`LocalJobRegistry`/storage stack with a scripted subprocess provider.
 - Real-CLI end-to-end (requires network + `dsh` on PATH): `DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` — drives this package's own checkout through the real install-smoke loop.
 - Release: `node scripts/release.mjs <x.y.z>` (bumps, stamps CHANGELOG, re-runs the gate, commits + tags; never pushes).
