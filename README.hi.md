@@ -159,6 +159,10 @@ test_drive(target: string, headlessTask?: string, background?: boolean,
 
 निर्णय नियम: इंस्टॉल विफलता, बूट विफलता (`smoke.fail`) या `not-registered`/`failed` तक पहुँचा क्षमता चरण ⇒ `fail`; इंस्टॉल पास + पैच प्रभावी + साफ़ बूट (`pass`/`boot-ok`) + अनइंस्टॉल पास ⇒ `pass` (`observed` पर क्षमता नोट के साथ); इंस्टॉल हुआ पर बाद की कोई पुष्टि अधूरी ⇒ `partial`; अन्यथा ⇒ `unknown`।
 
+## CI (GitHub Actions)
+
+रिपॉज़िटरी में एक composite [`action.yml`](action.yml) शामिल है जिसे किसी भी प्लगइन रिपॉ में `uses:` से दोबारा इस्तेमाल किया जा सकता है: यह लक्ष्य को एक अलग-थलग throwaway profile में चलाता है और CI द्वारा उपभोग किया जाने वाला रिपोर्ट जोड़ा — Markdown (PR कमेंट) और JUnit XML (स्टेटस चेक) — उत्सर्जित करता है। इनपुट `target` (आवश्यक)/`headless-task`/`dsh-version`; आउटपुट `markdown`/`junit`/`verdict`। ड्राइव को कुंजी की आवश्यकता नहीं है; केवल capability assertion को `DEEPSEEK_API_KEY` चाहिए और इसके बिना वह `skipped` (कभी असफल नहीं) रहती है।
+
 ## Permissions & data (अनुमतियाँ और डेटा)
 
 - केवल सार्वजनिक सेवाएँ उपभोग होती हैं: `ctx.subprocess`, `ctx.jobs`, `ctx.storageDomain`, `ctx.tools`, `ctx.commands`।

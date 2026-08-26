@@ -160,6 +160,36 @@ Returns a run record (`tdr_...`), a matrix (`tdm_...`), or — with no id — th
 
 Verdict rules: install failure, boot failure (`smoke.fail`), or a capability stage that reached `not-registered`/`failed` ⇒ `fail`; install pass + patch effective + clean boot (`pass`/`boot-ok`) + uninstall pass ⇒ `pass` (with a capability note when `observed`); anything installed but missing a later assurance ⇒ `partial`; otherwise `unknown`.
 
+## CI (GitHub Actions)
+
+The repository ships a composite [`action.yml`](action.yml) that reuses `dsh-test-drive` in any plugin repo. It drives a target in an isolated throwaway profile and emits the report pair CI consumes: Markdown (PR comment) and JUnit XML (test reporter / status check).
+
+```yaml
+# .github/workflows/test-drive.yml
+name: test-drive
+on: [pull_request, workflow_dispatch]
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Drive this plugin
+        id: drive
+        uses: PerryLink/dsh-test-drive@v0.2.4
+        with:
+          target: github:${{ github.repository }}#${{ github.sha }}
+      - name: Publish JUnit
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: ${{ steps.drive.outputs.junit }}
+      - name: Comment the report
+        run: cat "${{ steps.drive.outputs.markdown }}"
+```
+
+`action.yml` inputs: `target` (required), `headless-task` (optional smoke task), `dsh-version` (the `dsh` CLI spec). Outputs: `markdown`, `junit` (report paths), and `verdict` (`pass`/`fail`/`partial`/`unknown`). The drive itself stays keyless (install → patch check → boot smoke → uninstall → cleanup); a capability assertion is the only stage that needs `DEEPSEEK_API_KEY`, and it is `skipped`, never failed, without one.
+
+The same report pair is available programmatically: `renderDriveResult` / `renderMatrix` (Markdown) and `renderDriveJUnitXml` / `renderMatrixJUnitXml` (JUnit) are exported from the package root over a settled `DriveResult` or `MatrixRecord`.
+
 ## Permissions & data
 
 - Only public services are consumed: `ctx.subprocess`, `ctx.jobs`, `ctx.storageDomain`, `ctx.tools`, `ctx.commands`.

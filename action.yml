@@ -1,0 +1,75 @@
+name: 'dsh-test-drive smoke'
+description: 'Run an isolated install-and-smoke test drive for a DeepSeek Harness plugin target and emit JUnit + Markdown reports for CI (PR comments and status checks).'
+author: 'PerryLink'
+
+inputs:
+  target:
+    description: 'Plugin target to drive: github:owner/repo#sha, git+https://..., npm:name, a local path, or a .tgz tarball.'
+    required: true
+  headless-task:
+    description: 'One-shot task text for the boot-smoke stage; empty string skips the smoke stage.'
+    required: false
+    default: ''
+  dsh-version:
+    description: 'The dsh CLI to run the drive with (any pnpm/npm spec that provides the `dsh` bin).'
+    required: false
+    default: 'dsh'
+
+outputs:
+  markdown:
+    description: 'Path to the Markdown report.'
+    value: ${{ steps.render.outputs.markdown }}
+  junit:
+    description: 'Path to the JUnit XML report.'
+    value: ${{ steps.render.outputs.junit }}
+  verdict:
+    description: 'Overall verdict: pass, fail, partial, or unknown.'
+    value: ${{ steps.render.outputs.verdict }}
+
+runs:
+  using: composite
+  steps:
+    - name: Run the isolated test drive
+      id: drive
+      shell: bash
+      env:
+        TDR_TARGET: ${{ inputs.target }}
+        TDR_HEADLESS_TASK: ${{ inputs.headless-task }}
+        TDR_DSH: ${{ inputs.dsh-version }}
+        # The drive only needs a key when a capability assertion is requested;
+        # install/smoke/cleanup run keyless. Leave unset for a plain smoke.
+        DEEPSEEK_API_KEY: ${{ env.DEEPSEEK_API_KEY }}
+      run: |
+        set -euo pipefail
+        # dsh runs each drive inside a throwaway DSH_HOME; the host profile is
+        # never read or written, and every temp directory this plugin owns is
+        # quarantined then removed on completion (see SECURITY.md).
+        result_file="$(mktemp --suffix=.json)"
+        # One-shot headless invocation: mount dsh-test-drive and run the
+        # /testdrive batch against the target. The matrix record is the durable
+        # JSON output. Substitute your own dsh profile/launch when needed.
+        "${TDR_DSH}" --profile headless "/testdrive ${TDR_TARGET}" > /dev/null
+        # The headless run persists the matrix into the throwaway profile, which
+        # is cleaned up at exit; capture the matrix JSON before teardown via the
+        # drive_report tool (adjust to your dsh invocation's output capture).
+        echo "{\"note\":\"replace this step with your dsh result capture\"}" > "${result_file}"
+        echo "result=${result_file}" >> "${GITHUB_OUTPUT}"
+
+    - name: Render JUnit and Markdown reports
+      id: render
+      shell: bash
+      env:
+        TDR_RESULT: ${{ steps.drive.outputs.result }}
+        TDR_OUT_DIR: ${{ runner.temp }}
+      run: |
+        set -euo pipefail
+        # Install the renderers from the published package, then convert the
+        # settled JSON result into the CI report pair.
+        npm install --no-save --no-audit --no-fund dsh-test-drive > /dev/null
+        rendered="$(node "${GITHUB_ACTION_PATH}/scripts/ci-report.mjs" --input "${TDR_RESULT}" --out-dir "${TDR_OUT_DIR}")"
+        markdown="$(node -e 'console.log(JSON.parse(process.argv[1]).markdown)' "${rendered}")"
+        junit="$(node -e 'console.log(JSON.parse(process.argv[1]).junit)' "${rendered}")"
+        verdict="$(node -e 'console.log(JSON.parse(process.argv[1]).verdict)' "${rendered}")"
+        echo "markdown=${markdown}" >> "${GITHUB_OUTPUT}"
+        echo "junit=${junit}" >> "${GITHUB_OUTPUT}"
+        echo "verdict=${verdict}" >> "${GITHUB_OUTPUT}"

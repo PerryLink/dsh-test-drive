@@ -49,7 +49,7 @@ export type { ChildRunResult, InstalledPackage } from './driver.ts'
 export { DriveRunner, freshId, progressLine, RUN_ID_PREFIX, MATRIX_ID_PREFIX } from './drive.ts'
 export type { DriveDeps, DriveOptions } from './drive.ts'
 export { DRIVE_BATCH_KIND, startBatchJob, runBatch, matrixSummary } from './batch.ts'
-export { renderDriveResult, renderMatrix, statusMark, formatDuration } from './report.ts'
+export { renderDriveResult, renderMatrix, renderDriveJUnitXml, renderMatrixJUnitXml, statusMark, formatDuration } from './report.ts'
 export { parseTargets } from './command.ts'
 export { driveDomainSpec, DOMAIN_NAME, DOMAIN_VERSION } from './domain.ts'
 

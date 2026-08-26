@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **JUnit output.** `renderDriveJUnitXml` / `renderMatrixJUnitXml` render a settled `DriveResult` / `MatrixRecord` as JUnit XML (one testcase per stage / per target; failing stages/targets become `<failure>` entries with XML-escaped text) for GitHub Actions test reporters.
+- **Composite CI action.** A root [`action.yml`](action.yml) (`uses: PerryLink/dsh-test-drive@<version>`) drives a target in an isolated throwaway profile and emits the report pair CI consumes — Markdown (PR comment) and JUnit (status check) — via the `scripts/ci-report.mjs` converter. The isolation/ownership/cleanup red lines are untouched: the action only runs the existing pipeline and serializes its already-settled result.
+
 ## [0.2.3] - 2026-08-22
 
 ### Changed

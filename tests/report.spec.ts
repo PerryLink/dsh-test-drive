@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import { formatDuration, renderDriveResult, renderMatrix, statusMark } from '../src/report.ts'
+import { formatDuration, renderDriveJUnitXml, renderDriveResult, renderMatrix, renderMatrixJUnitXml, statusMark } from '../src/report.ts'
 import { RESULT_SCHEMA } from '../src/result.ts'
 import type { DriveResult, MatrixRecord } from '../src/result.ts'
 
@@ -84,5 +84,52 @@ describe('renderMatrix', () => {
     expect(text).toContain('1 pass, 1 fail')
     expect(text).toContain('## Attention')
     expect(text).toContain('`b`: exit 1')
+  })
+})
+
+describe('JUnit renderers', () => {
+  it('renders a drive result as a testsuite with one testcase per stage', () => {
+    const xml = renderDriveJUnitXml(resultFixture())
+    expect(xml).toContain('<?xml version="1.0"')
+    expect(xml).toContain('<testsuite')
+    expect(xml).toContain('name="install"')
+    expect(xml).toContain('name="smoke"')
+    expect(xml).toContain('failures="0"')
+  })
+
+  it('renders a matrix as a testsuite with failing targets as failures', () => {
+    const matrix: MatrixRecord = {
+      schema: RESULT_SCHEMA,
+      id: 'tdm_9',
+      createdAt: '2026-08-16T00:00:00.000Z',
+      durationMs: 10_000,
+      rows: [
+        { target: 'a', kind: 'repo', verdict: 'pass', install: 'pass', smoke: 'pass', durationMs: 100, summary: 'ok' },
+        { target: 'b', kind: 'npm', verdict: 'fail', install: 'fail', smoke: 'skipped', durationMs: 200, summary: 'exit 1' },
+      ],
+      totals: { total: 2, pass: 1, fail: 1, partial: 0, unknown: 0 },
+    }
+    const xml = renderMatrixJUnitXml(matrix)
+    expect(xml).toContain('tests="2"')
+    expect(xml).toContain('failures="1"')
+    expect(xml).toContain('name="b"')
+    expect(xml).toContain('<failure message="exit 1"')
+  })
+
+  it('escapes XML special characters in targets and summaries', () => {
+    const matrix: MatrixRecord = {
+      schema: RESULT_SCHEMA,
+      id: 'tdm_x',
+      createdAt: '2026-08-16T00:00:00.000Z',
+      durationMs: 1_000,
+      rows: [
+        { target: 'a<b>&"c"', kind: 'repo', verdict: 'fail', install: 'fail', smoke: 'skipped', durationMs: 100, summary: 'a<b' },
+      ],
+      totals: { total: 1, pass: 0, fail: 1, partial: 0, unknown: 0 },
+    }
+    const xml = renderMatrixJUnitXml(matrix)
+    expect(xml).toContain('a&lt;b&gt;&amp;&quot;c&quot;')
+    expect(xml).toContain('message="a&lt;b"')
+    expect(xml).not.toContain('a<b>&"c"')
   })
 })

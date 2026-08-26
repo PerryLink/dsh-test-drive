@@ -159,6 +159,10 @@ test_drive(target: string, headlessTask?: string, background?: boolean,
 
 判定规则：安装失败、启动失败（`smoke.fail`）或能力阶段到达 `not-registered`/`failed` ⇒ `fail`；安装通过 + patch 生效 + 启动干净（`pass`/`boot-ok`）+ 卸载通过 ⇒ `pass`（`observed` 时附能力说明）；已安装但后续保证缺失 ⇒ `partial`；其余 ⇒ `unknown`。
 
+## CI (GitHub Actions)
+
+仓库内置一个 composite [`action.yml`](action.yml)，可在任意插件仓库里 `uses:` 复用：它在一次性隔离 profile 里驱动目标，并输出 CI 消费的报告对 —— Markdown（PR 评论）与 JUnit XML（状态检查）。输入 `target`（必填）/`headless-task`/`dsh-version`；输出 `markdown`/`junit`/`verdict`。驱动本身无需密钥；只有 capability 断言需要 `DEEPSEEK_API_KEY`，缺省时该阶段 `skipped` 而非失败。
+
 ## Permissions & data（权限与数据）
 
 - 只消费公开服务：`ctx.subprocess`、`ctx.jobs`、`ctx.storageDomain`、`ctx.tools`、`ctx.commands`。

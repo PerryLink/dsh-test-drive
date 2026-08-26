@@ -87,3 +87,78 @@ export function renderMatrix(matrix: MatrixRecord): string {
   }
   return lines.join('\n')
 }
+
+/** Escape text for safe embedding in a JUnit XML attribute or element body. */
+function escapeXml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
+/** Seconds with three decimals, for JUnit `time` attributes. */
+function seconds(ms: number): string {
+  return (ms / 1_000).toFixed(3)
+}
+
+/** Whether a stage/row verdict counts as a JUnit failure. */
+function isFailure(status: string): boolean {
+  return status === 'fail' || status === 'partial'
+}
+
+/**
+ * Render one drive result as a JUnit XML `<testsuite>` (one `<testcase>` per
+ * stage), consumable by GitHub Actions test reporters.
+ * @param result - the complete drive result.
+ * @returns the JUnit XML document.
+ */
+export function renderDriveJUnitXml(result: DriveResult): string {
+  const stages: Array<[string, StageStatus | SmokeStatus | CapabilityStatus, number, string]> = [
+    ['install', result.stages.install.status, result.stages.install.durationMs, result.stages.install.summary],
+    ['config', result.stages.config.status, result.stages.config.durationMs, result.stages.config.summary],
+    ['smoke', result.stages.smoke.status, result.stages.smoke.durationMs, result.stages.smoke.summary],
+    ['uninstall', result.stages.uninstall.status, result.stages.uninstall.durationMs, result.stages.uninstall.summary],
+  ]
+  if (result.stages.capability !== undefined) {
+    stages.push(['capability', result.stages.capability.status, result.stages.capability.durationMs, result.stages.capability.detail])
+  }
+  const failures = stages.filter(([, status]) => isFailure(status))
+  const cases = stages.map(([name, status, durationMs, summary]) => {
+    const body = isFailure(status)
+      ? `<failure message="${escapeXml(summary)}" type="${escapeXml(status)}"></failure>`
+      : ''
+    return `    <testcase classname="dsh-test-drive" name="${escapeXml(name)}" time="${seconds(durationMs)}">${body}</testcase>`
+  }).join('\n')
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    `<testsuite name="dsh-test-drive ${escapeXml(result.target.spec)}" tests="${stages.length}" failures="${failures.length}" errors="0" time="${seconds(result.run.durationMs)}">`,
+    cases,
+    '</testsuite>',
+    '',
+  ].join('\n')
+}
+
+/**
+ * Render one batch matrix as a JUnit XML `<testsuite>` (one `<testcase>` per
+ * target), consumable by GitHub Actions test reporters.
+ * @param matrix - the aggregated batch matrix.
+ * @returns the JUnit XML document.
+ */
+export function renderMatrixJUnitXml(matrix: MatrixRecord): string {
+  const cases = matrix.rows.map((row) => {
+    const body = isFailure(row.verdict)
+      ? `<failure message="${escapeXml(row.summary)}" type="${escapeXml(row.verdict)}"></failure>`
+      : ''
+    return `    <testcase classname="dsh-test-drive" name="${escapeXml(row.target)}" time="${seconds(row.durationMs)}">${body}</testcase>`
+  }).join('\n')
+  const failures = matrix.rows.filter(row => isFailure(row.verdict)).length
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    `<testsuite name="dsh-test-drive matrix ${escapeXml(matrix.id)}" tests="${matrix.rows.length}" failures="${failures}" errors="0" time="${seconds(matrix.durationMs)}">`,
+    cases,
+    '</testsuite>',
+    '',
+  ].join('\n')
+}

@@ -159,6 +159,10 @@ Retorna um registro de execução (`tdr_...`), uma matriz (`tdm_...`) ou — sem
 
 Regras de veredicto: falha de instalação, de inicialização (`smoke.fail`) ou uma etapa de capacidade que chegou a `not-registered`/`failed` ⇒ `fail`; instalação aprovada + patch efetivo + inicialização limpa (`pass`/`boot-ok`) + desinstalação aprovada ⇒ `pass` (com nota de capacidade quando `observed`); instalado mas sem alguma garantia posterior ⇒ `partial`; caso contrário ⇒ `unknown`.
 
+## CI (GitHub Actions)
+
+O repositório inclui um [`action.yml`](action.yml) composite reutilizável com `uses:` em qualquer repositório de plugins: executa o alvo em um perfil descartável e emite o par de relatórios que a CI consome — Markdown (comentário de PR) e JUnit XML (verificação de status). Entradas `target` (obrigatório)/`headless-task`/`dsh-version`; saídas `markdown`/`junit`/`verdict`. O drive não requer chave; apenas a asserção de capacidade precisa de `DEEPSEEK_API_KEY` e fica `skipped` (nunca falha) sem ela.
+
 ## Permissions & data (Permissões e dados)
 
 - Apenas serviços públicos são consumidos: `ctx.subprocess`, `ctx.jobs`, `ctx.storageDomain`, `ctx.tools`, `ctx.commands`.
