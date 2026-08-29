@@ -1,6 +1,7 @@
 <div align="center">
 
 # 🧪 dsh-test-drive
+- **Canal 1024 store**: `npm i -g dsh1024` uma vez, depois `dsh1024 plugin --profile web add dsh-test-drive` (conta para o ranking de instalações do [deepseek1024.com](https://deepseek1024.com)).
 
 **Testes isolados de instalação e inicialização para plugins do DeepSeek Harness.**
 

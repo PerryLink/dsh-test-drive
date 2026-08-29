@@ -1,6 +1,7 @@
 <div align="center">
 
 # 🧪 dsh-test-drive
+- **1024 商店渠道**：先 `npm i -g dsh1024`，再 `dsh1024 plugin --profile web add dsh-test-drive`（计入 [deepseek1024.com](https://deepseek1024.com) 安装排行）。
 
 **面向 DeepSeek Harness 插件的隔离式安装冒烟实测。**
 

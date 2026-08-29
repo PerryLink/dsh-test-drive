@@ -1,6 +1,7 @@
 <div align="center">
 
 # 🧪 dsh-test-drive
+- **1024 स्टोर चैनल**: एक बार `npm i -g dsh1024`, फिर `dsh1024 plugin --profile web add dsh-test-drive` ([deepseek1024.com](https://deepseek1024.com) इंस्टॉल रैंकिंग में गिना जाता है)।
 
 **DeepSeek Harness प्लगइन के लिए पृथक इंस्टॉल-और-स्मोक परीक्षण।**
 
