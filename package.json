@@ -1,6 +1,6 @@
 {
   "name": "dsh-test-drive",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Isolated install-and-smoke test drives for DeepSeek Harness plugins: installs a repo or npm package into a throwaway DSH_HOME profile, verifies the bundle patch layer and boot logs, records a structured pass/fail result matrix (JSON/Markdown) for scoring pipelines, and quarantines every temp directory it owns",
   "repository": {
     "type": "git",
