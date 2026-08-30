@@ -10,10 +10,18 @@ import { readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { JobId } from '@deepseek-ai/dsh-jobs'
-import { CallId } from '@deepseek-ai/dsh-llm'
 import type { ToolExecutionResult } from '@deepseek-ai/dsh-tools'
 import { afterEach, describe, expect, it } from 'vitest'
 import { FakeSubprocessRuntime, mountHarness, type Harness, type ScriptedSpawn } from './harness.ts'
+
+/**
+ * Brand a synthetic tool-call id without naming the host line's brand: the
+ * published `0.1.1-rc.2` line exports `CallId` while host HEAD renamed it to
+ * `ToolCallId` — deriving the type from `tools.execute` keeps both typecheck
+ * rulers green.
+ */
+type ToolExecInput = Parameters<Harness['ctx']['tools']['execute']>[0]
+const makeCallId = (id: string): ToolExecInput['callId'] => id as ToolExecInput['callId']
 
 const MANIFEST = JSON.stringify({ name: 'dsh-profile-headless', private: true, dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', 'dsh-click'] } } })
 const INSTALLED = JSON.stringify({ name: 'dsh-click', version: '0.2.0', dsh: { bundle: { patch: './cordis.patch.yml' } } })
@@ -30,7 +38,7 @@ const PASS_SCRIPTS: ScriptedSpawn[] = [
 async function callTool(harness: Harness, name: string, args: unknown, counter: { n: number }): Promise<ToolExecutionResult> {
   counter.n += 1
   return harness.ctx.tools.execute({
-    callId: CallId(`drive-spec-${counter.n}`),
+    callId: makeCallId(`drive-spec-${counter.n}`),
     name,
     arguments: args,
     agent: harness.agent,

@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Compatibility: verified against host checkout `0.1.2-alpha.1` (2026-08-30) — all 12 consumed seams unchanged; the five-language README compatibility tables note the verified checkout baseline while the published baseline stays `0.1.1-rc.2`. `storageDomain` remains deliberately optional: the published `dsh-base` bundle does not mount it, host HEAD does (since `3a4232a8fa`), and the plugin boots on either line.
+
+### Fixed
+
+- Test harness: derive synthetic tool-call ids from `tools.execute`'s input type instead of importing `CallId` (renamed to `ToolCallId` on host HEAD), keeping `typecheck` (checkout) and `typecheck:ci` (published `0.1.1-rc.2`) both green.
+
 ## [0.3.1] - 2026-08-29
 
 ### Changed

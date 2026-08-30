@@ -11,10 +11,18 @@
 import { readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { CallId } from '@deepseek-ai/dsh-llm'
 import { afterAll, describe, expect, it } from 'vitest'
 import { mountHarness, type Harness } from './harness.ts'
 import { VERSION } from '../src/version.ts'
+
+/**
+ * Brand a synthetic tool-call id without naming the host line's brand: the
+ * published `0.1.1-rc.2` line exports `CallId` while host HEAD renamed it to
+ * `ToolCallId` — deriving the type from `tools.execute` keeps both typecheck
+ * rulers green.
+ */
+type ToolExecInput = Parameters<Harness['ctx']['tools']['execute']>[0]
+const makeCallId = (id: string): ToolExecInput['callId'] => id as ToolExecInput['callId']
 
 const e2e = process.env.DSH_TESTDRIVE_E2E === '1' ? describe : describe.skip
 
@@ -38,7 +46,7 @@ e2e('real CLI', () => {
     })
     const repoRoot = join(import.meta.dirname, '..')
     const result = await harness.ctx.tools.execute({
-      callId: CallId('e2e-drive'),
+      callId: makeCallId('e2e-drive'),
       name: 'test_drive',
       arguments: { target: repoRoot },
       agent: harness.agent,
@@ -75,7 +83,7 @@ e2e('real CLI', () => {
   it('leaves nothing behind after a failed install target', async () => {
     const harness: Harness = await mountHarness({ localSubprocess: true })
     const result = await harness.ctx.tools.execute({
-      callId: CallId('e2e-drive-fail'),
+      callId: makeCallId('e2e-drive-fail'),
       name: 'test_drive',
       arguments: { target: 'dsh-package-that-cannot-exist-4f2c9e1' },
       agent: harness.agent,
