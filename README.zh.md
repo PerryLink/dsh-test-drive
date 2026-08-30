@@ -25,7 +25,7 @@
 
 | 组件 | 版本 |
 |---|---|
-| DeepSeek Harness | `0.1.1-rc.2`（peer 依赖 ≥ 0.1.0-rc.8） |
+| DeepSeek Harness | `0.1.1-rc.2`（peer 依赖 ≥ 0.1.0-rc.8；已于 2026-08-30 对照 checkout `0.1.2-alpha.1` 核验） |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | 包管理器 | `pnpm@11.7.0` |
 | 平台 | Windows / macOS / Linux（纯 host 插件） |

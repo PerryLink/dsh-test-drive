@@ -30,10 +30,11 @@ import { TempWorkspaceRegistry } from './workspace.ts'
 export const name = 'dsh-test-drive'
 
 /**
- * Public services only. `storageDomain` is deliberately OPTIONAL: the shipped
- * `dsh-base` bundle (headless profile) does not mount it, and the plugin must
+ * Public services only. `storageDomain` is deliberately OPTIONAL: the published
+ * `dsh-base` bundle (0.1.1-rc.2 line) does not mount it, and the plugin must
  * still boot there — report persistence degrades to disabled with a logged
- * reason, tools keep working.
+ * reason, tools keep working. Host HEAD (0.1.2-alpha.1) mounts storage-domain
+ * since `3a4232a8fa`; the degrade path remains for the published line.
  */
 export const inject = ['tools', 'commands', 'subprocess', 'jobs']
 
