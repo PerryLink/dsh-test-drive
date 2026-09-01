@@ -25,7 +25,7 @@
 
 | Componente | Versão |
 |---|---|
-| DeepSeek Harness | `0.1.1-rc.2` (dependências peer ≥ 0.1.0-rc.8; verificado contra o checkout `0.1.2-alpha.1` em 2026-08-30) |
+| DeepSeek Harness | `0.1.1-rc.2` (dependências peer ≥ 0.1.0-rc.8; verificado contra o checkout `0.1.2-alpha.2` em 2026-08-30) 0.1.2-alpha.2 (adaptado em 2026-08-31): o envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Gerenciador de pacotes | `pnpm@11.7.0` |
 | Plataforma | Windows / macOS / Linux (plugin apenas host) |
