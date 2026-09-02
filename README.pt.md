@@ -25,7 +25,7 @@
 
 | Componente | Versão |
 |---|---|
-| DeepSeek Harness | `0.1.1-rc.2` (dependências peer ≥ 0.1.0-rc.8; verificado contra o checkout `0.1.2-alpha.5` em 2026-09-01) 0.1.2-alpha.5 (adaptado em 2026-09-02): o envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
+| DeepSeek Harness | `0.1.2-alpha.5` (adaptado em 2026-09-02; dependências peer ≥ 0.1.0-rc.8): o envelope de sessão mantém seu campo ignorable apenas para compatibilidade de leitura de logs armazenados - o Session.append ainda não consegue estampá-lo, então o comportamento da porta não muda. |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Gerenciador de pacotes | `pnpm@11.7.0` |
 | Plataforma | Windows / macOS / Linux (plugin apenas host) |
@@ -195,7 +195,7 @@ pnpm run typecheck && pnpm run typecheck:ci && pnpm test
 pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack
 ```
 
-- `typecheck` resolve `@deepseek-ai/*` pelo checkout local do harness; `typecheck:ci` verifica contra os tipos publicados `0.1.1-rc.2`.
+- `typecheck` resolve `@deepseek-ai/*` pelo checkout local do harness; `typecheck:ci` verifica contra os tipos publicados `0.1.2-alpha.5`.
 - Os testes usam a pilha real `Context`/`Session`/`ToolRuntime`/`LocalJobRegistry`/armazenamento com um provedor de subprocesso roteirizado.
 - End-to-end com CLI real (requer rede + `dsh` no PATH): `DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` — testa o checkout deste próprio pacote pelo loop real de instalação e inicialização.
 - Lançamento: `node scripts/release.mjs <x.y.z>` (sobe versão, carimba o CHANGELOG, repete a porta, commit + tag; nunca faz push).

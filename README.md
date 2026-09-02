@@ -26,7 +26,7 @@
 
 | Component | Version |
 |---|---|
-| DeepSeek Harness | `0.1.1-rc.2` (peer dependencies ≥ 0.1.0-rc.8; verified against checkout `0.1.2-alpha.5` on 2026-09-01) |
+| DeepSeek Harness | `0.1.2-alpha.5` (adapted 2026-09-02; peer dependencies ≥ 0.1.0-rc.8) |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Package manager | `pnpm@11.7.0` |
 | Platform | Windows / macOS / Linux (host-only plugin) |
@@ -222,7 +222,7 @@ pnpm run typecheck && pnpm run typecheck:ci && pnpm test
 pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack
 ```
 
-- `typecheck` resolves `@deepseek-ai/*` through the local harness checkout; `typecheck:ci` checks against the published `0.1.1-rc.2` types.
+- `typecheck` resolves `@deepseek-ai/*` through the local harness checkout; `typecheck:ci` checks against the published `0.1.2-alpha.5` types.
 - Tests use the real `Context`/`Session`/`ToolRuntime`/`LocalJobRegistry`/storage stack with a scripted subprocess provider.
 - Real-CLI end-to-end (requires network + `dsh` on PATH): `DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` — drives this package's own checkout through the real install-smoke loop.
 - Release: `node scripts/release.mjs <x.y.z>` (bumps, stamps CHANGELOG, re-runs the gate, commits + tags; never pushes).

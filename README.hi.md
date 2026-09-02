@@ -25,7 +25,7 @@
 
 | घटक | संस्करण |
 |---|---|
-| DeepSeek Harness | `0.1.1-rc.2` (peer निर्भरताएँ ≥ 0.1.0-rc.8; 2026-09-01 को checkout `0.1.2-alpha.5` से सत्यापित) 0.1.2-alpha.5 (2026-09-02 को अनुकूलित): सत्र लिफ़ाफ़ा अपना ignorable फ़ील्ड केवल संग्रहीत-लॉग पठन संगतता के लिए रखता है - Session.append अभी भी इसे स्टैम्प नहीं कर सकता, इसलिए गेट व्यवहार अपरिवर्तित है। |
+| DeepSeek Harness | `0.1.2-alpha.5` (2026-09-02 को अनुकूलित; peer निर्भरताएँ ≥ 0.1.0-rc.8): सत्र लिफ़ाफ़ा अपना ignorable फ़ील्ड केवल संग्रहीत-लॉग पठन संगतता के लिए रखता है - Session.append अभी भी इसे स्टैम्प नहीं कर सकता, इसलिए गेट व्यवहार अपरिवर्तित है। |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | पैकेज प्रबंधक | `pnpm@11.7.0` |
 | प्लेटफ़ॉर्म | Windows / macOS / Linux (केवल host प्लगइन) |
@@ -195,7 +195,7 @@ pnpm run typecheck && pnpm run typecheck:ci && pnpm test
 pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack
 ```
 
-- `typecheck` स्थानीय harness चेकआउट से `@deepseek-ai/*` हल करता है; `typecheck:ci` प्रकाशित `0.1.1-rc.2` प्रकारों से जाँचता है।
+- `typecheck` स्थानीय harness चेकआउट से `@deepseek-ai/*` हल करता है; `typecheck:ci` प्रकाशित `0.1.2-alpha.5` प्रकारों से जाँचता है।
 - परीक्षण वास्तविक `Context`/`Session`/`ToolRuntime`/`LocalJobRegistry`/स्टोरेज स्टैक और एक स्क्रिप्टेड subprocess प्रदाता का उपयोग करते हैं।
 - वास्तविक-CLI एंड-टू-एंड (नेटवर्क + PATH पर `dsh` आवश्यक): `DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` — इसी पैकेज के चेकआउट को वास्तविक इंस्टॉल-स्मोक लूप से परखता है।
 - रिलीज़: `node scripts/release.mjs <x.y.z>` (संस्करण बढ़ाता, CHANGELOG मुहर लगाता, द्वार फिर चलाता, commit + tag; कभी push नहीं)।
