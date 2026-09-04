@@ -126,7 +126,7 @@ Devuelve un registro de ejecución (`tdr_...`), una matriz (`tdm_...`) o — sin
   "schema": "dsh-test-drive/v1",
   "run": { "runId": "tdr_9f2c...", "startedAt": "2026-08-16T00:00:00.000Z",
            "finishedAt": "2026-08-16T00:00:45.120Z", "durationMs": 45120,
-           "harnessVersion": "0.1.1-rc.2", "pluginVersion": "0.1.0",
+           "harnessVersion": "0.1.2-rc.1", "pluginVersion": "0.3.6",
            "platform": "win32", "node": "v22.22.3" },
   "target": { "kind": "repo", "spec": "github:owner/dsh-click#abc123",
               "resolved": { "packageName": "dsh-click", "packageVersion": "0.1.0",
