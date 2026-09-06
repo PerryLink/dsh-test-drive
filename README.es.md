@@ -25,7 +25,7 @@
 
 | Componente | Versión |
 |---|---|
-| DeepSeek Harness | `0.1.2-rc.1` (adaptado el 2026-09-04; dependencias peer ≥ 0.1.2-rc.1): el sobre de sesión conserva su campo ignorable solo para compatibilidad de lectura de logs almacenados - Session.append aún no puede estamparlo, por lo que el comportamiento de la puerta no cambia. |
+| DeepSeek Harness | **`dsh-v0.1.3-alpha.1`** (etiqueta de GitHub, verificado el 2026-09-06: cadena completa de puertas + smoke de instalación de perfil). Línea de dependencia npm `0.1.2-rc.1` (dependencias entre pares `>=0.1.2-rc.1 <0.2.0`). |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Gestor de paquetes | `pnpm@11.7.0` |
 | Plataforma | Windows / macOS / Linux (complemento solo host) |
