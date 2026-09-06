@@ -26,7 +26,7 @@
 
 | Component | Version |
 |---|---|
-| DeepSeek Harness | `0.1.2-rc.1` (adapted 2026-09-04; peer dependencies ≥ 0.1.0-rc.8) |
+| DeepSeek Harness | `0.1.2-rc.1` (adapted 2026-09-04; peer dependencies ≥ 0.1.2-rc.1) |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Package manager | `pnpm@11.7.0` |
 | Platform | Windows / macOS / Linux (host-only plugin) |
