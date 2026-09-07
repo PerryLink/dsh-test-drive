@@ -1,6 +1,6 @@
 {
   "name": "dsh-test-drive",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Isolated install-and-smoke test drives for DeepSeek Harness plugins: installs a repo or npm package into a throwaway DSH_HOME profile, verifies the bundle patch layer and boot logs, records a structured pass/fail result matrix (JSON/Markdown) for scoring pipelines, and quarantines every temp directory it owns",
   "repository": {
     "type": "git",
@@ -113,7 +113,8 @@
     "typescript": "^5.9.0",
     "zod": "^4.4.3"
   },
-  "devDependencies": {"@deepseek-ai/dsh-attachment": "0.1.2-rc.1", 
+  "devDependencies": {
+    "@deepseek-ai/dsh-attachment": "0.1.2-rc.1",
     "@deepseek-ai/cordis": "^4.0.2",
     "@deepseek-ai/cordis-plugin-include": "^1.0.7",
     "@deepseek-ai/cordis-plugin-loader": "^1.0.3",
