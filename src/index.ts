@@ -38,6 +38,7 @@ export const name = 'dsh-test-drive'
  */
 export const inject = ['tools', 'commands', 'subprocess', 'jobs']
 
+// Service Definition — public contract: result, workspace, driver, domain, and batch surfaces.
 export { VERSION } from './version.ts'
 export { Config, resolveConfig } from './config.ts'
 export { RESULT_SCHEMA, verdictOf, DriveResultSchema, MatrixRecordSchema, totalsOf } from './result.ts'
@@ -88,10 +89,12 @@ export function apply(ctx: Context, config: Config): void {
   const runner = new DriveRunner(deps)
   const services: ToolServices = { ...deps, runner }
 
+  // Service Provider — registration: the two tools and the /testdrive command ride effects.
   for (const tool of allTools(services)) {
     ctx.effect(() => ctx.tools.register(tool), `dsh-test-drive: ${tool.name} tool`)
   }
 
+  // Consumer — the /testdrive handler drives the CLI driver over the subprocess/jobs services.
   ctx.effect(() => ctx.commands.register({
     name: 'testdrive',
     description: 'Batch test-drive plugin targets in isolated throwaway profiles (background job + matrix report)',
