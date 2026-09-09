@@ -3,8 +3,10 @@
  * The plugin is host-only — no browser half, no client bundle.
  *
  * The only runtime imports are `node:` builtins and `@deepseek-ai/*` peers
- * (cordis/schemastery/dsh-*), which tsdown externalizes by default. Nothing
- * third-party is bundled; THIRD_PARTY_NOTICES.md records exactly that.
+ * (cordis/schemastery/dsh-*), which tsdown externalizes by default. No
+ * third-party package is bundled; the one mirrored snippet — the MIT-licensed
+ * Zstandard frame scanner in `src/session-log.ts` — is recorded in
+ * THIRD_PARTY_NOTICES.md.
  */
 
 import { defineConfig } from 'tsdown'

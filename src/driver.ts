@@ -9,12 +9,13 @@
  * @module dsh-test-drive/driver
  */
 
-import { access, readFile, readdir, stat, writeFile, mkdir } from 'node:fs/promises'
+import { access, readFile, writeFile, mkdir } from 'node:fs/promises'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 import type { SubprocessSpawnSpec } from '@deepseek-ai/dsh-subprocess'
 import type { ResolvedConfig } from './config.ts'
 import type { TargetKind } from './result.ts'
+import { readNewestSessionLog } from './session-log.ts'
 
 /** Cap on collected output per stream (in-memory tail). */
 export const COLLECT_MAX_BYTES = 64 * 1024
@@ -321,38 +322,20 @@ export class DshDriver {
   /**
    * Read the newest durable session log from a throwaway home's session store.
    * Used by the capability stage to observe what the headless task actually
-   * did (tool calls, command replies). Tolerant by contract: a missing or
-   * empty store yields '' so the stage degrades instead of throwing.
+   * did (tool calls, command replies). The harness layout is
+   * `sessions/<projectKey>/<sessionId>/session[.vN].jsonl[.zstd]`, so the
+   * lookup drills two levels down, prefers the highest canonical generation,
+   * and decodes every Zstandard frame (the artifact is a concatenated-frame
+   * container; Node's whole-file API silently returns only the first frame).
+   * Tolerant by contract: a missing or empty store yields '' so the stage
+   * degrades instead of throwing.
    *
    * @param home - the throwaway DSH_HOME.
    * @param maxBytes - cap on the returned text (tail end kept).
    * @returns the newest session file's text, or '' when none exists.
    */
   async readNewestSession(home: string, maxBytes: number): Promise<string> {
-    let entries: string[]
-    try {
-      entries = await readdir(join(home, 'sessions'))
-    } catch {
-      return ''
-    }
-    let newest: { path: string; mtimeMs: number } | undefined
-    for (const entry of entries) {
-      if (!/\.jsonl$/u.test(entry)) continue
-      const path = join(home, 'sessions', entry)
-      try {
-        const info = await stat(path)
-        if (info.isFile() && (newest === undefined || info.mtimeMs > newest.mtimeMs)) newest = { path, mtimeMs: info.mtimeMs }
-      } catch {
-        // Vanished between listing and stat — the next entry may still be valid.
-      }
-    }
-    if (newest === undefined) return ''
-    try {
-      const text = await readFile(newest.path, 'utf8')
-      return text.length <= maxBytes ? text : text.slice(text.length - maxBytes)
-    } catch {
-      return ''
-    }
+    return readNewestSessionLog(home, maxBytes)
   }
 
   /** Run the uninstall stage: `dsh plugin --profile <name> remove <pkg>`. */
