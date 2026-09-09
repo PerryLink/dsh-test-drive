@@ -1,7 +1,7 @@
 /**
  * Shared test harness: REAL Cordis `Context`, REAL `SessionStore`/`Session`,
  * REAL `ToolRuntime`, REAL `LocalJobRegistry`, REAL `Storage` hub + `DomainFacility`
- * from the 0.1.1-rc.2 peers — plus a scriptable subprocess provider (a subclass
+ * from the 0.1.5-alpha.1 peers — plus a scriptable subprocess provider (a subclass
  * of the REAL `SubprocessRuntime`), a memory storage backend, a structural
  * commands registry, and a structurally complete fake agent. The CLI process
  * work is scripted data; the plugin contract, tool pipeline, job lifecycle,
@@ -14,7 +14,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
-import AgentRegistry, { Inbox } from '@deepseek-ai/dsh-agent'
+import AgentRegistry from '@deepseek-ai/dsh-agent'
 import LocalJobRegistry from '@deepseek-ai/dsh-jobs-local'
 import SessionStore, { SessionId, type Session } from '@deepseek-ai/dsh-session'
 import Storage from '@deepseek-ai/dsh-storage'
@@ -108,7 +108,6 @@ export class FakeSubprocessRuntime extends SubprocessRuntime {
       settleDone({ exitCode: null, signal: 'SIGTERM' })
     }
     return {
-      pid: 7777,
       stdin: undefined,
       stdout: undefined,
       stderr: undefined,
@@ -146,11 +145,28 @@ export class FakeCommandsRuntime {
 
 /** Build a structurally complete fake agent over a real session. */
 export function makeAgent(session: Session, scopeCtx: Context): Agent {
+  // 0.1.5-alpha.1 keeps the concrete inbox loop-internal and exposes only the
+  // `Inbox` interface, so the stub is the contract itself (the shape of
+  // `unsupportedInbox()` in the official agent-loop-testkit): empty pending
+  // lists and mutation methods that throw, so a test that ever reaches for an
+  // Inbox mutation fails loudly instead of silently doing nothing.
+  const rejectInboxMutation = (): never => {
+    throw new Error('this test Agent does not support Inbox mutations')
+  }
   const fake = {
     id: session.id,
     options: { provider: 'deepseek', model: 'demo-model' },
     session,
-    inbox: new Inbox(session, { inserted: () => {}, discarded: () => {}, claimed: () => {} }),
+    inbox: {
+      nextTurn: [],
+      nextStep: [],
+      clear: rejectInboxMutation,
+      append: rejectInboxMutation,
+      prepend: rejectInboxMutation,
+      replace: rejectInboxMutation,
+      remove: rejectInboxMutation,
+      splice: rejectInboxMutation,
+    },
     status: 'idle' as const,
     ctx: scopeCtx,
     send: () => undefined,
