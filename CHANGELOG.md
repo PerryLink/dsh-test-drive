@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.10] - 2026-09-09
+
+### Fixed
+
+- Read the newest durable session log from the harness's real layout. `DshDriver.readNewestSession` scanned only `.jsonl` files directly under `$DSH_HOME/sessions`, but the harness stores one artifact per session at `sessions/<projectKey>/<sessionId>/session[.vN].jsonl[.zstd]`, so on a real profile the lookup always returned `''` and the capability stage reported `not-registered` for every tool and command — a false negative with no test coverage. The new `src/session-log.ts` drills both directory levels, accepts only canonical generation names (`session.jsonl` / `session.vN.jsonl`, N >= 1, optional `.zstd`), prefers the highest generation inside a session directory (mtime breaks ties and orders sessions), and skips root-level stray files, symlinks, and non-canonical names. The legacy flat layout is not read: the harness itself rejects it, so a stray root-level `*.jsonl` can no longer be mistaken for a session.
+- Decode every frame of a compressed session artifact. The harness writes `.jsonl.zstd` as a concatenated Zstandard container (one header frame plus one frame per durable batch), and Node's whole-file `zstdDecompressSync` silently returns only the first frame — measured on this baseline (4 frames / 256 bytes → 41 bytes, header only). `src/session-log.ts` scans the frame structure and decodes frame by frame, so `tool/call`/`tool/result` lines after the header are visible again; a torn final frame still yields every earlier frame, and a corrupt container degrades to `''` instead of throwing (the pre-fix tolerant contract).
+
+### Changed
+
+- Capability semantics: `stages.capability.status` now reflects what the headless task actually recorded instead of a structural false negative, so downstream `dsh-score` reads a real `observed`/`invoked`/`not-registered` verdict from new runs. Existing records and the `dsh-test-drive/v1` shape are unchanged (`DOMAIN_VERSION` stays `1`).
+
+### Docs
+
+- `THIRD_PARTY_NOTICES.md` records the MIT-licensed Zstandard frame scanner mirrored from DeepSeek Harness (`packages/session/session-persistence-jsonl/src/zstd.ts`, host `dsh-v0.1.5-alpha.1`) with the full MIT notice; `AGENTS.md` documents the new module; the five READMEs refresh the structured-result sample to `pluginVersion` `0.3.10`.
+- New tests: `tests/session-log.spec.ts` covers the layout and decoding contract on synthetic fixtures only (two-level drill-down, `_no-cwd`, generation preference over newer mtimes, checksummed multi-frame containers, torn-tail recovery, tail truncation, empty/missing store, corrupt artifact, ignored flat legacy layout), and `tests/driver.spec.ts` closes the decode → `analyzeSessionLog` → `observed` loop through the driver.
+
 ## [0.3.9] - 2026-09-09
 
 ### Fixed
