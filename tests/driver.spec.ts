@@ -5,11 +5,13 @@
  * @module dsh-test-drive/test/driver.spec
  */
 
-import { mkdtemp, readFile, rm } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { zstdCompressSync } from 'node:zlib'
 import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it } from 'vitest'
+import { analyzeSessionLog } from '../src/capability.ts'
 import { resolveConfig } from '../src/config.ts'
 import { DshDriver, anchorLocalTarget, classifyTarget, dumpMentionsPackage, hasBootFailure, isGitLike, parseDumpLayers, parseIgnoredBuildScript, parseNpmShim } from '../src/driver.ts'
 import { FAKE_DSH_BIN, FakeSubprocessRuntime } from './harness.ts'
@@ -246,6 +248,40 @@ describe('DshDriver.readInstalledPackage', () => {
     writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ dsh: { profile: { bundles: ['@deepseek-ai/dsh-base'] } } }))
     const driver = new DshDriver({ ctx, config: resolveConfig({ dshBin: FAKE_DSH_BIN }), log: () => {} })
     expect(await driver.readInstalledPackage(profileDir)).toBeUndefined()
+  })
+})
+
+describe('DshDriver.readNewestSession', () => {
+  it('reads the newest session from the project/session layout and closes the decode → analyze loop', async () => {
+    const ctx = new Context()
+    new FakeSubprocessRuntime(ctx)
+    const home = await tempHome()
+    const dir = join(home, 'sessions', '--proj--', 'sess-1')
+    await mkdir(dir, { recursive: true })
+    const lines = [
+      '{"type":"session","version":3}',
+      '{"type":"tool/call","data":{"name":"plugin_vet","callId":"c1"}}',
+      '{"type":"tool/result","data":{"callId":"c1","output":"license: MIT, verdict pass"}}',
+      '{"type":"assistant/message","data":{"text":"capability-check-done"}}',
+    ]
+    // The host writes one frame per durable batch: a whole-file decode sees only the header.
+    await writeFile(join(dir, 'session.v3.jsonl.zstd'), Buffer.concat(lines.map(line => zstdCompressSync(`${line}\n`))))
+
+    const driver = new DshDriver({ ctx, config: resolveConfig({ dshBin: FAKE_DSH_BIN }), log: () => {} })
+    const text = await driver.readNewestSession(home, 1024 * 1024)
+    expect(text).toContain('"type":"tool/call"')
+    const analysis = analyzeSessionLog(text, { kind: 'tool', name: 'plugin_vet', expect: 'verdict pass' })
+    expect(analysis.status).toBe('observed')
+    expect(analysis.expectMatched).toBe(true)
+  })
+
+  it('returns empty text when the store has no session artifact', async () => {
+    const ctx = new Context()
+    new FakeSubprocessRuntime(ctx)
+    const home = await tempHome()
+    await mkdir(join(home, 'sessions'), { recursive: true })
+    const driver = new DshDriver({ ctx, config: resolveConfig({ dshBin: FAKE_DSH_BIN }), log: () => {} })
+    expect(await driver.readNewestSession(home, 1024)).toBe('')
   })
 })
 
