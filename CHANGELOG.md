@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.9] - 2026-09-09
+
+### Fixed
+
+- Adapt the shared test harness to the DeepSeek Harness `0.1.5-alpha.1` seam: `Inbox` is now a type-only interface (the concrete class moved loop-internal), so the fake agent carries the official `unsupportedInbox()` shape — empty `nextTurn`/`nextStep` lists and six mutation methods that throw — instead of `new Inbox(...)`; `SubprocessHandle` no longer declares `pid`, so the scripted handle drops it. No plugin behavior change: `src/` never touched either API, and the 24 previously failing tests were all this one fixture cascade.
+
+### Changed
+
+- Pin the 13 `@deepseek-ai/dsh-*` devDependencies to `0.1.5-alpha.1`, widen the six `@deepseek-ai/dsh-*` peer ranges to `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0` (one band cannot resolve both prerelease lines under registry-driven resolution), and add `0.1.5-alpha.1` to `dshWorkshop.compatibility.dshVersions`. The seam re-check found no consumer-facing break: `DOMAIN_VERSION` stays `1` and the `dsh-test-drive/v1` record shape is unchanged, so `dsh-score` keeps reading existing `test_drive` records.
+- Raise the compat workflow's `@deepseek-ai/dsh` CLI and `dsh-base`/`dsh-headless` profile installs to `0.1.5-alpha.1`, so the monthly compatibility job verifies the declared baseline.
+
+### Docs
+
+- Move the verified host baseline in all five READMEs to `dsh-v0.1.5-alpha.1` (2026-09-09: full gate chain + profile install smoke), record both published dependency lines and the composite peer range, refresh the `typecheck:ci` target, and update the structured-result sample (`harnessVersion` `0.1.5-alpha.1` / `pluginVersion` `0.3.9`).
+- Align the repo `AGENTS.md` facts with the new baseline (peer line, harness peers, `typecheck:ci` target, storage-domain mounting).
+
 ## [0.3.8] - 2026-09-07
 
 ### Docs
