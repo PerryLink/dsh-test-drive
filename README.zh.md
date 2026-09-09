@@ -25,7 +25,7 @@
 
 | 组件 | 版本 |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.1.3-alpha.1`**（GitHub tag，2026-09-06 已核验：完整门禁链 + profile 安装冒烟）。npm 依赖线 `0.1.2-rc.1`（peer 依赖 `>=0.1.2-rc.1 <0.2.0`）。 |
+| DeepSeek Harness | **`dsh-v0.1.5-alpha.1`**（GitHub tag，2026-09-09 已核验：完整门禁链 + profile 安装冒烟）。npm 依赖线 `0.1.2-rc.1` 与 `0.1.5-alpha.1`（peer 依赖 `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`）。 |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | 包管理器 | `pnpm@11.7.0` |
 | 平台 | Windows / macOS / Linux（纯 host 插件） |
@@ -126,7 +126,7 @@ test_drive(target: string, headlessTask?: string, background?: boolean,
   "schema": "dsh-test-drive/v1",
   "run": { "runId": "tdr_9f2c...", "startedAt": "2026-08-16T00:00:00.000Z",
            "finishedAt": "2026-08-16T00:00:45.120Z", "durationMs": 45120,
-           "harnessVersion": "0.1.2-rc.1", "pluginVersion": "0.3.6",
+           "harnessVersion": "0.1.5-alpha.1", "pluginVersion": "0.3.9",
            "platform": "win32", "node": "v22.22.3" },
   "target": { "kind": "repo", "spec": "github:owner/dsh-click#abc123",
               "resolved": { "packageName": "dsh-click", "packageVersion": "0.1.0",
@@ -195,7 +195,7 @@ pnpm run typecheck && pnpm run typecheck:ci && pnpm test
 pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack
 ```
 
-- `typecheck` 经本地 harness checkout 解析 `@deepseek-ai/*`；`typecheck:ci` 对照已发布的 `0.1.2-rc.1` 类型检查。
+- `typecheck` 经本地 harness checkout 解析 `@deepseek-ai/*`；`typecheck:ci` 对照已发布的 `0.1.5-alpha.1` 类型检查。
 - 测试使用真实 `Context`/`Session`/`ToolRuntime`/`LocalJobRegistry`/storage 栈 + 脚本化 subprocess provider。
 - 真实 CLI 端到端（需网络 + PATH 上的 `dsh`）：`DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` —— 用真实安装冒烟循环实测本包自身 checkout。
 - 发布：`node scripts/release.mjs <x.y.z>`（升版本、CHANGELOG 落日期、重跑门禁、commit + tag；不 push）。
