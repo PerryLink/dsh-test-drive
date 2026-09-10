@@ -26,7 +26,7 @@
 
 | Componente | Versión |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.1.5-alpha.1`** (etiqueta de GitHub, verificado el 2026-09-09: cadena completa de puertas + smoke de instalación de perfil). Líneas de dependencia npm `0.1.2-rc.1` y `0.1.5-alpha.1` (dependencias entre pares `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). |
+| DeepSeek Harness | **`dsh-v0.1.5-rc.1`** (etiqueta de GitHub, verificado el 2026-09-10: cadena completa de puertas + smoke de instalación de perfil). Líneas de dependencia npm `0.1.2-rc.1` y `0.1.5-rc.1` (dependencias entre pares `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Gestor de paquetes | `pnpm@11.7.0` |
 | Plataforma | Windows / macOS / Linux (complemento solo host) |
@@ -127,7 +127,7 @@ Devuelve un registro de ejecución (`tdr_...`), una matriz (`tdm_...`) o — sin
   "schema": "dsh-test-drive/v1",
   "run": { "runId": "tdr_9f2c...", "startedAt": "2026-08-16T00:00:00.000Z",
            "finishedAt": "2026-08-16T00:00:45.120Z", "durationMs": 45120,
-           "harnessVersion": "0.1.5-alpha.1", "pluginVersion": "0.3.10",
+           "harnessVersion": "0.1.5-rc.1", "pluginVersion": "0.3.10",
            "platform": "win32", "node": "v22.22.3" },
   "target": { "kind": "repo", "spec": "github:owner/dsh-click#abc123",
               "resolved": { "packageName": "dsh-click", "packageVersion": "0.1.0",
@@ -196,7 +196,7 @@ pnpm run typecheck && pnpm run typecheck:ci && pnpm test
 pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack
 ```
 
-- `typecheck` resuelve `@deepseek-ai/*` a través del checkout local del harness; `typecheck:ci` comprueba contra los tipos publicados `0.1.5-alpha.1`.
+- `typecheck` resuelve `@deepseek-ai/*` a través del checkout local del harness; `typecheck:ci` comprueba contra los tipos publicados `0.1.5-rc.1`.
 - Las pruebas usan la pila real `Context`/`Session`/`ToolRuntime`/`LocalJobRegistry`/almacenamiento con un proveedor de subprocesos guionizado.
 - End-to-end con CLI real (requiere red + `dsh` en PATH): `DSH_TESTDRIVE_E2E=1 pnpm run test:e2e` — prueba el checkout de este propio paquete por el bucle real de instalación y arranque.
 - Lanzamiento: `node scripts/release.mjs <x.y.z>` (sube versión, sella CHANGELOG, repite la puerta, commit + tag; nunca hace push).
