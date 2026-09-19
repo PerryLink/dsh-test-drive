@@ -24,6 +24,10 @@ Standalone DeepSeek Harness plugin repository (`dsh-test-drive`). Development fo
 - **Waterfall discipline.** This plugin registers no waterfall listeners today; if it ever does, allow/passthrough MUST call `next()`.
 - **Loud misconfiguration.** Out-of-bounds numbers, invalid env names, and bad profile names fail `resolveConfig` at load, never silently.
 
+## Delivery (P1-3, ruled 2026-09-19)
+
+The card asked for "the results matrix also through `deliverables/presented`". That seam does not exist as a callable service — the host's deliverables half is the `present` **tool**, and `@deepseek-ai/dsh-deliverables` exposes no plugin-facing service face (a plugin cannot emit a `deliverables/presented` row itself). Ruling: the delivery path is the shipped `present` tool — the report files stay where they are (`drive_report` / `drive-batch` write the matrix record and the Markdown/JSON pair, the storage domain keeps them addressable), and the agent hands them to the user by calling `present` with those paths, which is exactly what renders in the Deliverables UI. No second presentation service is added, and the Markdown/JUnit consumers are unchanged. Recorded so the question is not re-litigated; if the host ever grows a real deliverables service, this note is the place to revisit.
+
 ## Checks
 
 `pnpm run typecheck && pnpm run typecheck:ci && pnpm test && pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts && pnpm pack`
