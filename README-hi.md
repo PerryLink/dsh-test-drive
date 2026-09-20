@@ -212,7 +212,7 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 
 ## PerryLink DSH Plugin Family
 
-यह प्रोजेक्ट [PerryLink](https://github.com/PerryLink) द्वारा अनुरक्षित [40 DeepSeek Harness प्लगइनों](https://github.com/PerryLink) में से एक है। अगर यह आपकी मदद करता है, तो बाकी भी करेंगे:
+यह प्रोजेक्ट [PerryLink](https://github.com/PerryLink) द्वारा अनुरक्षित [41 DeepSeek Harness प्लगइनों](https://github.com/PerryLink) में से एक है। अगर यह आपकी मदद करता है, तो बाकी भी करेंगे:
 
 | Plugin | One-liner |
 |---|---|
