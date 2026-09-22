@@ -16,6 +16,7 @@
 [![Version](https://img.shields.io/github/v/tag/PerryLink/dsh-test-drive?label=version)](https://github.com/PerryLink/dsh-test-drive/releases)
 [![npm version](https://img.shields.io/npm/v/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
 [![npm downloads](https://img.shields.io/npm/dm/dsh-test-drive)](https://www.npmjs.com/package/dsh-test-drive)
+[![dshfind](https://dshfind.com/api/badge/PerryLink/dsh-test-drive?metric=downloads&lang=pt)](https://dshfind.com/pt/plugins/PerryLink/dsh-test-drive?ref=badge)
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
