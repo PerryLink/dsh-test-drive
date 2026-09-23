@@ -28,7 +28,7 @@
 
 | 组件 | 版本 |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.1.7-alpha.1`**（GitHub tag，2026-09-11 已核验：完整门禁链 + profile 安装冒烟）。npm 依赖线 `0.1.2-rc.1` 与 `0.1.5-rc.2`（peer 依赖 `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`）。 |
+| DeepSeek Harness | **`dsh-v0.1.7-alpha.2`**（GitHub tag，2026-09-11 已核验：完整门禁链 + profile 安装冒烟）。npm 依赖线 `0.1.2-rc.1` 与 `0.1.5-rc.2`（peer 依赖 `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`）。 |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | 包管理器 | `pnpm@11.7.0` |
 | 平台 | Windows / macOS / Linux（纯 host 插件） |
