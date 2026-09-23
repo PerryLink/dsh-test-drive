@@ -237,7 +237,8 @@ describe('test_drive through the real pipeline', () => {
     const value = result.value as Record<string, unknown>
     expect(value.kind).toBe('background')
     expect(String(value.jobId)).toMatch(/^drive-batch-/)
-    const snapshot = await harness.ctx.jobs.wait(JobId(String(value.jobId)), 10_000, harness.agent)
+    // The registry fences access by session id; the harness Agent carries it as `id`.
+    const snapshot = await harness.ctx.jobs.wait(JobId(String(value.jobId)), 10_000, harness.agent.id)
     expect(snapshot.status).toBe('completed')
     expect(String(snapshot.detail)).toContain('1 pass')
   })
