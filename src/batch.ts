@@ -1,9 +1,9 @@
 /**
  * The `drive-batch` background-job producer over `ctx.jobs`. One job drives a
  * list of targets (serially or with bounded concurrency), streams per-target
- * progress lines through `readOutput`, and on settlement writes the matrix
- * record (JSON) into the storage domain and the latest-matrix pointer, so
- * `drive_report` can fetch the Markdown/JSON pair by id.
+ * progress lines through the job's own ring writer (`JobHandle.append`), and on
+ * settlement writes the matrix record (JSON) into the storage domain and the
+ * latest-matrix pointer, so `drive_report` can fetch the Markdown/JSON pair by id.
  *
  * @module dsh-test-drive/batch
  */
@@ -117,22 +117,28 @@ export function startBatchJob(deps: BatchDeps, targets: readonly string[], owner
   return deps.ctx.jobs.start({
     kind,
     label,
-    owner,
-    run: (): JobHooks => {
+    // The registry fences a job by session, and the invoking agent's id IS that
+    // session (`Agent.id` and `Session.id` are the same value).
+    owner: owner.id,
+    run: (job): JobHooks => {
       const abort = new AbortController()
-      const progress: string[] = []
       const done = Promise.withResolvers<JobOutcome>()
       let settled = false
+      // The producer narrates through the job's own ring writer. 0.1.7 removed
+      // the buffer-plus-`readOutput` hook; `JobHandle.append` is the same
+      // incremental contract the model reads, and the registry drains it before
+      // settlement closes the ring.
+      const say = (line: string): void => { job.append(`${line}\n`) }
       const settle = (outcome: JobOutcome): JobOutcome => {
         if (settled) return outcome
         settled = true
-        progress.push(`${outcome.status === 'completed' ? 'batch finished' : 'batch stopped'}: ${outcome.detail ?? ''}`)
+        say(`${outcome.status === 'completed' ? 'batch finished' : 'batch stopped'}: ${outcome.detail ?? ''}`)
         done.resolve(outcome)
         return outcome
       }
-      void runBatch(deps, sanitized, abort.signal, line => { progress.push(line) })
+      void runBatch(deps, sanitized, abort.signal, line => { say(line) })
         .then(({ matrixId, matrix }) => {
-          progress.push(`matrix ${matrixId} — fetch with drive_report("${matrixId}")`)
+          say(`matrix ${matrixId} — fetch with drive_report("${matrixId}")`)
           settle({ status: 'completed', detail: matrixSummary(matrix) })
         })
         .catch((error: unknown) => {
@@ -142,14 +148,10 @@ export function startBatchJob(deps: BatchDeps, targets: readonly string[], owner
       return {
         cancel(reason?: string): void {
           abort.abort(reason ?? 'cancelled')
-          progress.push(`cancelling (${reason ?? 'no reason given'})`)
+          say(`cancelling (${reason ?? 'no reason given'})`)
           settle({ status: 'killed', detail: `cancelled: ${reason ?? 'no reason given'}` })
         },
         done: done.promise,
-        readOutput: (): string => {
-          if (progress.length === 0) return ''
-          return `${progress.splice(0, progress.length).join('\n')}\n`
-        },
       }
     },
   })

@@ -1,7 +1,7 @@
 /**
  * The batch producer over the REAL jobs registry: serial drives stream
- * progress through `readOutput`, settlement writes the matrix and the latest
- * pointer, and the completion notice carries the tallies.
+ * progress through the job's ring writer, settlement writes the matrix and the
+ * latest pointer, and the completion notice carries the tallies.
  * @module dsh-test-drive/test/batch.spec
  */
 
@@ -85,21 +85,22 @@ describe('startBatchJob through the real registry', () => {
     const deps = batchDeps(harness)
     const jobId = startBatchJob(deps, ['dsh-a', 'dsh-b'], harness.agent, '/testdrive dsh-a dsh-b')
     expect(jobId).toMatch(/drive-batch-\d+/u)
-    const snapshot = await harness.ctx.jobs.wait(JobId(String(jobId)), 10_000, harness.agent)
+    const snapshot = await harness.ctx.jobs.wait(JobId(String(jobId)), 10_000, harness.session.id)
     expect(snapshot.status).toBe('completed')
     expect(String(snapshot.detail)).toContain('1 pass, 1 fail')
-    const output = harness.ctx.jobs.read(JobId(String(jobId)), harness.agent)
-    expect(output.text).toContain('matrix tdm_')
-    expect(output.text).toContain('drive_report')
+    const output = harness.ctx.jobs.read(JobId(String(jobId)), harness.session.id)
+    const text = output.chunks.map(chunk => chunk.text).join('')
+    expect(text).toContain('matrix tdm_')
+    expect(text).toContain('drive_report')
   })
 
   it('kills cleanly when cancelled', async () => {
     const harness = await mountHarness({ plugin: false, scripts: [{ hang: true }] })
     const deps = batchDeps(harness)
     const jobId = startBatchJob(deps, ['dsh-a', 'dsh-b'], harness.agent, 'batch')
-    const kill = harness.ctx.jobs.kill(JobId(String(jobId)), harness.agent, 'test cancel')
+    const kill = harness.ctx.jobs.kill(JobId(String(jobId)), harness.session.id, 'test cancel')
     expect(kill).toBe('requested')
-    const snapshot = await harness.ctx.jobs.wait(JobId(String(jobId)), 10_000, harness.agent)
+    const snapshot = await harness.ctx.jobs.wait(JobId(String(jobId)), 10_000, harness.session.id)
     expect(snapshot.status).toBe('killed')
   })
 })

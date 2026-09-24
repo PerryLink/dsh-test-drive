@@ -78,7 +78,7 @@ describe('drive_report', () => {
     const harness = await mountHarness({ scripts: PASS_SCRIPTS })
     const background = await callTool(harness, 'test_drive', { target: 'dsh-click', background: true })
     const jobId = String((background.value as Record<string, unknown>).jobId)
-    await harness.ctx.jobs.wait(JobId(jobId), 10_000, harness.agent)
+    await harness.ctx.jobs.wait(JobId(jobId), 10_000, harness.session.id)
     const report = await callTool(harness, 'drive_report', {})
     expect(report.isError).toBe(false)
     const value = report.value as Record<string, unknown>
@@ -93,7 +93,7 @@ describe('drive_report', () => {
     const harness = await mountHarness({ scripts: PASS_SCRIPTS })
     const background = await callTool(harness, 'test_drive', { target: 'dsh-click', background: true })
     const jobId = String((background.value as Record<string, unknown>).jobId)
-    await harness.ctx.jobs.wait(JobId(jobId), 10_000, harness.agent)
+    await harness.ctx.jobs.wait(JobId(jobId), 10_000, harness.session.id)
     const latest = await callTool(harness, 'drive_report', {})
     const matrixId = (latest.value as Record<string, unknown>).id
     const byId = await callTool(harness, 'drive_report', { id: matrixId })
