@@ -28,7 +28,7 @@
 
 | Component | Version |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.1.7-alpha.2`** (GitHub tag, verified 2026-09-11: full gate chain + profile install smoke). npm dependency lines `0.1.2-rc.1` and `0.1.5-rc.2` (peer dependencies `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`) |
+| DeepSeek Harness | **`dsh-v0.1.7-rc.1`** (GitHub tag, verified 2026-09-24: full gate chain + profile install smoke). npm dependency lines `0.1.2-rc.1` and `0.1.5-rc.2` (peer dependencies `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`) |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Package manager | `pnpm@11.7.0` |
 | Platform | Windows / macOS / Linux (host-only plugin) |

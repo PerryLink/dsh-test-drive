@@ -28,7 +28,7 @@
 
 | Componente | Versão |
 |---|---|
-| DeepSeek Harness | **`dsh-v0.1.7-alpha.2`** (tag do GitHub, verificado em 2026-09-11: cadeia completa de portas + smoke de instalação de perfil). Linhas de dependência npm `0.1.2-rc.1` e `0.1.5-rc.2` (dependências de pares `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). |
+| DeepSeek Harness | **`dsh-v0.1.7-rc.1`** (tag do GitHub, verificado em 2026-09-24: cadeia completa de portas + smoke de instalação de perfil). Linhas de dependência npm `0.1.2-rc.1` e `0.1.5-rc.2` (dependências de pares `>=0.1.2-rc.1 <0.2.0 || >=0.1.5-alpha.1 <0.2.0`). |
 | Node.js | `^22.19.0 \|\| >=24.0.0` |
 | Gerenciador de pacotes | `pnpm@11.7.0` |
 | Plataforma | Windows / macOS / Linux (plugin apenas host) |
