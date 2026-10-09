@@ -36,6 +36,14 @@
 *English:* part of a 40+ plugin family for DeepSeek Harness. If it is useful, **a star helps the next person find it** — nothing is gated behind it.
 
 
+## What is dsh-test-drive?
+
+Isolated install-and-smoke test drives for DeepSeek Harness plugins.
+
+Install, smoke, verify, and clean up in a throwaway profile — your real `~/.dsh` stays untouched.
+
+![Terminal demo of dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
+
 ## Compatibility
 
 | Component | Version |

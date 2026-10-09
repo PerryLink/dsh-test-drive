@@ -33,6 +33,14 @@
 这个插件是 [DSH 插件家族](https://github.com/PerryLink)的一员（40+ 个，全部 Apache-2.0）。如果你在用，**给个 star** —— 它不会解锁任何功能，但会让下一个人在搜索里更容易找到它。
 
 *English:* part of a 40+ plugin family for DeepSeek Harness. If it is useful, **a star helps the next person find it** — nothing is gated behind it.
+## What is dsh-test-drive?
+
+面向 DeepSeek Harness 插件的隔离式安装冒烟实测。
+
+在一次性 profile 中完成安装、冒烟、验证与清理——绝不触碰你真实的 `~/.dsh`。
+
+![dsh-test-drive 终端演示：dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
+
 ## Compatibility（兼容性）
 
 | 组件 | 版本 |
