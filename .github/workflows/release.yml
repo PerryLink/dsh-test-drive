@@ -18,7 +18,13 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+          # No `registry-url` on purpose: it makes setup-node write
+          # `//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}` into .npmrc, and a
+          # configured bearer token is preferred over the OIDC exchange. With the
+          # NPM_TOKEN secret retired that line is an EMPTY bearer token, so the
+          # registry answered 404 on PUT for v0.3.16 -- after the provenance statement
+          # had already been signed. Trusted publishing reads no secret, so both the
+          # `registry-url` line and the NODE_AUTH_TOKEN env are gone.
       - name: Refuse a tag that does not name the package version
         run: node scripts/check-tag-version.mjs "$GITHUB_REF_NAME"
       - run: pnpm install --frozen-lockfile
@@ -30,9 +36,10 @@ jobs:
       - run: pnpm run verify:artifacts
       - name: Render the changelog section for the release body
         run: node scripts/changelog-section.mjs "${GITHUB_REF_NAME#v}" > release-notes.md
+      # npm must be >= 11.5.1 to perform the trusted-publishing exchange itself; the
+      # npm bundled with Node 22 is 10.x and never requests an OIDC token.
+      - run: npm install -g npm@^11.5.1
       - run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: GitHub release
         uses: softprops/action-gh-release@v2
         with:
