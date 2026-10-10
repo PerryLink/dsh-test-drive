@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.16] - 2026-10-10
+
+### Fixed
+
+- Publish with `npm publish` instead of `pnpm publish`.
+
+  pnpm's publish omits the README and a gitHead from the packument, so the registry
+  stored an empty readme and the package page showed no documentation at all.
+  Both symptoms are known upstream: pnpm#12966 and pnpm#3373.
+
+
 ## [0.3.15] - 2026-10-10
 
 ### Changed
