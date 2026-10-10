@@ -42,6 +42,10 @@ Instala, prueba, verifica y limpia en un perfil desechable — tu `~/.dsh` real 
 
 ![Demostración de terminal de dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
 
+![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+
+*La misma ejecución, animada.*
+
 ## Compatibility (Compatibilidad)
 
 | Componente | Versión |

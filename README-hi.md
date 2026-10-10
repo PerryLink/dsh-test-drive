@@ -42,6 +42,10 @@ DeepSeek Harness प्लगइन के लिए पृथक इंस्�
 
 ![dsh-test-drive का टर्मिनल डेमो: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
 
+![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+
+*वही रन, एनिमेटेड।*
+
 ## Compatibility (संगतता)
 
 | घटक | संस्करण |

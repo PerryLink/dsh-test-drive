@@ -44,6 +44,10 @@ Install, smoke, verify, and clean up in a throwaway profile — your real `~/.ds
 
 ![Terminal demo of dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
 
+![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+
+*The same run, animated.*
+
 ## Compatibility
 
 | Component | Version |

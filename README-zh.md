@@ -42,6 +42,10 @@
 
 ![dsh-test-drive 终端演示：dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
 
+![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+
+*同一次运行，动图版。*
+
 ## Compatibility（兼容性）
 
 | 组件 | 版本 |
