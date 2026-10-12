@@ -235,7 +235,7 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 
 ## PerryLink DSH Plugin Family
 
-Este proyecto es uno de los **33 plugins activamente mantenidos** de DeepSeek Harness de [PerryLink](https://github.com/PerryLink): el registro tiene **42**, de los cuales **6** están congelados y **3** retirados; cada uno conserva su fila abajo, con el motivo en la columna Estado. Si este te ayuda, probablemente los demás también:
+Este proyecto es uno de los **34 plugins activamente mantenidos** de DeepSeek Harness de [PerryLink](https://github.com/PerryLink): el registro tiene **42**, de los cuales **5** están congelados y **3** retirados; cada uno conserva su fila abajo, con el motivo en la columna Estado. Si este te ayuda, probablemente los demás también:
 Este proyecto es uno de los [42 complementos de DeepSeek Harness](https://github.com/PerryLink) mantenidos por [PerryLink](https://github.com/PerryLink). Si este te ayuda, probablemente los demás también:
 
 | Plugin | En una línea | Estado |
@@ -260,7 +260,7 @@ Este proyecto es uno de los [42 complementos de DeepSeek Harness](https://github
 | **[dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions)** | Diagnósticos, formato, autocompletado, acciones de código y renombrado LSP sobre servidores de lenguaje | |
 | **[dsh-mask](https://github.com/PerryLink/dsh-mask)** | Middleware de enmascaramiento de PII: anonimiza en el límite del modelo, restaura en la capa de visualización | |
 | **[dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel)** | Panel de tiempo de ejecución MCP de solo lectura: comando /mcp + pestaña Settings con estado, herramientas y errores | |
-| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Memoria entre sesiones controlada por aprobación: costura ctx.memory + SQLite + herramienta de memoria | 🧊 CONGELADO — ver el README del repositorio |
+| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Memoria entre sesiones controlada por aprobación: costura ctx.memory + SQLite + herramienta de memoria | |
 | **[dsh-observe](https://github.com/PerryLink/dsh-observe)** | Exportador de observabilidad OpenTelemetry y Langfuse para DeepSeek Harness. | |
 | **[dsh-output-styles](https://github.com/PerryLink/dsh-output-styles)** | Cambio de estilo en tiempo de ejecución equivalente a outputStyles de Claude Code | |
 | **[dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules)** | Reglas de permisos declarativas allow/deny/ask estilo Claude Code con auditoría | |

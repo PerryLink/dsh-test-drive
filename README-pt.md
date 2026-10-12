@@ -235,7 +235,7 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 
 ## PerryLink DSH Plugin Family
 
-Este projeto é um dos **33 plugins ativamente mantidos** do DeepSeek Harness da [PerryLink](https://github.com/PerryLink): o registro tem **42**, dos quais **6** estão congelados e **3** aposentados; cada um mantém sua linha abaixo, com o motivo na coluna Status. Se este ajudou você, provavelmente os outros também ajudarão:
+Este projeto é um dos **34 plugins ativamente mantidos** do DeepSeek Harness da [PerryLink](https://github.com/PerryLink): o registro tem **42**, dos quais **5** estão congelados e **3** aposentados; cada um mantém sua linha abaixo, com o motivo na coluna Status. Se este ajudou você, provavelmente os outros também ajudarão:
 Este projeto é um dos [42 plugins de DeepSeek Harness](https://github.com/PerryLink) mantidos por [PerryLink](https://github.com/PerryLink). Se este ajuda você, os outros provavelmente também:
 
 | Plugin | Em uma linha | Status |
@@ -260,7 +260,7 @@ Este projeto é um dos [42 plugins de DeepSeek Harness](https://github.com/Perry
 | **[dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions)** | Diagnósticos, formatação, autocompletar, ações de código e renomeação LSP sobre servidores de linguagem | |
 | **[dsh-mask](https://github.com/PerryLink/dsh-mask)** | Middleware de mascaramento de PII: anonimiza no limite do modelo, restaura na camada de exibição | |
 | **[dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel)** | Painel de tempo de execução MCP somente leitura: comando /mcp + aba Settings com status, ferramentas e erros | |
-| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Memória entre sessões controlada por aprovação: costura ctx.memory + SQLite + ferramenta de memória | 🧊 CONGELADO — ver o README do repositório |
+| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | Memória entre sessões controlada por aprovação: costura ctx.memory + SQLite + ferramenta de memória | |
 | **[dsh-observe](https://github.com/PerryLink/dsh-observe)** | Exportador de observabilidade OpenTelemetry e Langfuse para DeepSeek Harness. | |
 | **[dsh-output-styles](https://github.com/PerryLink/dsh-output-styles)** | Troca de estilo em tempo de execução equivalente ao outputStyles do Claude Code | |
 | **[dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules)** | Regras de permissão declarativas allow/deny/ask estilo Claude Code com auditoria | |

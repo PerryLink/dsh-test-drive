@@ -235,7 +235,7 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 
 ## PerryLink DSH Plugin Family
 
-本项目是 [PerryLink](https://github.com/PerryLink) 维护的 DeepSeek Harness 插件家族成员：**33 个活跃维护**，名册共 **42** 个，其中 **6 个已冻结**、**3 个已退役**——每一个都在下表保留自己的行，原因见「状态」列。如果它能帮到你，其他的也会：
+本项目是 [PerryLink](https://github.com/PerryLink) 维护的 DeepSeek Harness 插件家族成员：**34 个活跃维护**，名册共 **42** 个，其中 **5 个已冻结**、**3 个已退役**——每一个都在下表保留自己的行，原因见「状态」列。如果它能帮到你，其他的也会：
 
 | Plugin | 一句话 | 状态 |
 |---|---|---|
@@ -259,7 +259,7 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 | **[dsh-lsp-actions](https://github.com/PerryLink/dsh-lsp-actions)** | 通过语言服务器的 LSP 诊断、格式化、补全、代码操作与重命名 | |
 | **[dsh-mask](https://github.com/PerryLink/dsh-mask)** | PII 脱敏中间件：模型边界匿名化、展示层还原 | |
 | **[dsh-mcp-panel](https://github.com/PerryLink/dsh-mcp-panel)** | 只读 MCP 运行时面板：/mcp 命令 + 带状态、工具与错误的 Settings 标签页 | |
-| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | 审批门控的跨会话记忆：ctx.memory 接缝 + SQLite + 记忆工具 | 🧊 已冻结 — 见仓库 README |
+| **[dsh-memento](https://github.com/PerryLink/dsh-memento)** | 审批门控的跨会话记忆：ctx.memory 接缝 + SQLite + 记忆工具 | |
 | **[dsh-observe](https://github.com/PerryLink/dsh-observe)** | DeepSeek Harness 的 OpenTelemetry 与 Langfuse 可观测导出器。 | |
 | **[dsh-output-styles](https://github.com/PerryLink/dsh-output-styles)** | Claude Code outputStyles 等价的运行时风格切换 | |
 | **[dsh-permission-rules](https://github.com/PerryLink/dsh-permission-rules)** | Claude Code 风格声明式 allow/deny/ask 权限规则，带审计 | |
