@@ -347,7 +347,9 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 
 </details>
 
-</details>## License (लाइसेंस)
+</details>
+
+## License (लाइसेंस)
 
 [Apache-2.0](LICENSE)
 

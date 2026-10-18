@@ -347,7 +347,9 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 
 </details>
 
-</details>## License（许可证）
+</details>
+
+## License（许可证）
 
 [Apache-2.0](LICENSE)
 

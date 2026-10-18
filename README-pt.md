@@ -347,7 +347,9 @@ Este projeto é um dos **87 plugins ativamente mantidos** do DeepSeek Harness da
 
 </details>
 
-</details>## License (Licença)
+</details>
+
+## License (Licença)
 
 [Apache-2.0](LICENSE)
 
