@@ -20,6 +20,11 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add dsh-test-drive
+```
+
+
 </div>
 
 ---
@@ -28,6 +33,13 @@
 **📖 Base de conhecimento do ecossistema** — dados medidos, não marketing: [guia de desenvolvimento · dados de seleção · critérios de manutenção](https://perrylink.github.io/dsh-plugin-guide/).
 
 <!-- star-cta -->
+## Install & uninstall (Instalação e desinstalação)
+
+```sh
+dsh plugin --profile web add dsh-test-drive     # instalar (npm) — ou a forma git acima
+dsh plugin --profile web remove dsh-test-drive  # desinstalar
+```
+
 ## ⭐ 如果它帮到了你
 
 Este plugin faz parte da [família de plugins DSH](https://github.com/PerryLink) (mais de 40, todos Apache-2.0). Se for útil, **deixe uma estrela**: não desbloqueia nada, mas ajuda a próxima pessoa a encontrá-lo.
@@ -87,13 +99,6 @@ dsh plugin --profile web add dsh-test-drive
 ```
 
 Pacotes pré-compilados não precisam de permissão de compilação. Reinicie o perfil e use `test_drive` / `/testdrive` em uma sessão.
-
-## Install & uninstall (Instalação e desinstalação)
-
-```sh
-dsh plugin --profile web add dsh-test-drive     # instalar (npm) — ou a forma git acima
-dsh plugin --profile web remove dsh-test-drive  # desinstalar
-```
 
 ## Configuration (Configuração)
 

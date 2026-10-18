@@ -20,6 +20,11 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add dsh-test-drive
+```
+
+
 </div>
 
 ---
@@ -28,6 +33,13 @@
 **📖 生态实测知识库**（实测数据，不是营销）：[插件开发指南 · 选型实测数据 · 维护取舍判据](https://perrylink.github.io/dsh-plugin-guide/)。
 
 <!-- star-cta -->
+## Install & uninstall（安装与卸载）
+
+```sh
+dsh plugin --profile web add dsh-test-drive     # 安装（npm）——或上面的 git 形式
+dsh plugin --profile web remove dsh-test-drive  # 卸载
+```
+
 ## ⭐ 如果它帮到了你
 
 这个插件是 [DSH 插件家族](https://github.com/PerryLink)的一员（40+ 个，全部 Apache-2.0）。如果你在用，**给个 star** —— 它不会解锁任何功能，但会让下一个人在搜索里更容易找到它。
@@ -87,13 +99,6 @@ dsh plugin --profile web add dsh-test-drive
 ```
 
 预构建包无需构建许可。重启 profile 后，即可在会话中使用 `test_drive` / `/testdrive`。
-
-## Install & uninstall（安装与卸载）
-
-```sh
-dsh plugin --profile web add dsh-test-drive     # 安装（npm）——或上面的 git 形式
-dsh plugin --profile web remove dsh-test-drive  # 卸载
-```
 
 ## Configuration（配置）
 

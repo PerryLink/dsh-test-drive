@@ -20,6 +20,11 @@
 
 [English](README.md) · [简体中文](README-zh.md) · [Español](README-es.md) · [Português](README-pt.md) · [हिन्दी](README-hi.md)
 
+```sh
+dsh plugin --profile <name> add dsh-test-drive
+```
+
+
 </div>
 
 ---
@@ -28,6 +33,13 @@
 **📖 इकोसिस्टम नॉलेज बेस** — मापे गए आँकड़े, मार्केटिंग नहीं: [डेवलपमेंट गाइड · चयन डेटा · रखरखाव मानदंड](https://perrylink.github.io/dsh-plugin-guide/)।
 
 <!-- star-cta -->
+## Install & uninstall (इंस्टॉल और अनइंस्टॉल)
+
+```sh
+dsh plugin --profile web add dsh-test-drive     # इंस्टॉल (npm) — या ऊपर वाला git रूप
+dsh plugin --profile web remove dsh-test-drive  # अनइंस्टॉल
+```
+
 ## ⭐ 如果它帮到了你
 
 यह प्लगइन [DSH प्लगइन परिवार](https://github.com/PerryLink) का हिस्सा है (40+ प्लगइन, सभी Apache-2.0)। अगर यह उपयोगी लगे, तो **एक स्टार दें** — इससे कोई सुविधा अनलॉक नहीं होती, पर अगला व्यक्ति इसे खोज में आसानी से पा लेता है।
@@ -87,13 +99,6 @@ dsh plugin --profile web add dsh-test-drive
 ```
 
 पहले से बने पैकेजों को बिल्ड अनुमति की आवश्यकता नहीं होती। प्रोफ़ाइल पुनः आरंभ करें, फिर सत्र से `test_drive` / `/testdrive` उपयोग करें।
-
-## Install & uninstall (इंस्टॉल और अनइंस्टॉल)
-
-```sh
-dsh plugin --profile web add dsh-test-drive     # इंस्टॉल (npm) — या ऊपर वाला git रूप
-dsh plugin --profile web remove dsh-test-drive  # अनइंस्टॉल
-```
 
 ## Configuration (विन्यास)
 
