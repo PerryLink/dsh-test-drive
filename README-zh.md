@@ -100,6 +100,13 @@ dsh plugin --profile web add dsh-test-drive
 
 预构建包无需构建许可。重启 profile 后，即可在会话中使用 `test_drive` / `/testdrive`。
 
+## DSH Desktop 不是受支持的测试宿主
+
+`test_drive` 需要一个能启动**第二个** headless DSH 进程的 `dsh` CLI。DSH Desktop 的
+`dsh.CMD` 只允许 `dsh plugin …`、`--dump-config` 和 `--version`，会按策略拒绝第二次
+headless 启动。请把 `config.dshBin` 指向 npm/pnpm 安装的 `dsh` CLI（或普通 Node + dsh
+JS 入口）。现在的报错会明确说明这一点，而不是“cannot parse npm shim”。
+
 ## Configuration（配置）
 
 所有键均可选（下列为默认值）；非法值在加载期响亮失败。

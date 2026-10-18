@@ -95,6 +95,9 @@ export function parseNpmShim(shimPath: string, shimText: string): string {
   const match = /"%dp0%\\(?<rel>node_modules\\[^"]+\.(?:js|cjs|mjs))"/u.exec(shimText)
   const rel = match?.groups?.rel
   if (rel === undefined) {
+    if (/ELECTRON_RUN_AS_NODE|DSH Desktop/iu.test(shimText)) {
+      throw new Error(`dsh-test-drive: ${shimPath} is the DSH Desktop launcher, whose CLI policy rejects a second headless DSH boot; set config.dshBin to an npm/pnpm-installed dsh CLI (or a plain Node + dsh JS entry) instead`)
+    }
     throw new Error(`dsh-test-drive: cannot parse npm shim ${shimPath} (no dp0-relative JS target found)`)
   }
   return join(dirname(shimPath), rel)

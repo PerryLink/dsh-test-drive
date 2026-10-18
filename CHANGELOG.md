@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.22] - 2026-10-19
+
+### Fixed
+
+- **A DSH Desktop launcher now fails with an actionable message (issue #6).** `parseNpmShim` detects the Electron/`DSH Desktop` launcher and explains that its CLI policy rejects a second headless boot; it tells the operator to point `config.dshBin` at an npm/pnpm `dsh` CLI (or Node + dsh JS entry). A five-language README section documents the unsupported host. Version constant synced to 0.3.22.
+
 ## [0.3.21] - 2026-10-19
 
 ### Fixed

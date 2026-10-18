@@ -100,6 +100,14 @@ dsh plugin --profile web add dsh-test-drive
 
 पहले से बने पैकेजों को बिल्ड अनुमति की आवश्यकता नहीं होती। प्रोफ़ाइल पुनः आरंभ करें, फिर सत्र से `test_drive` / `/testdrive` उपयोग करें।
 
+## DSH Desktop समर्थित परीक्षण होस्ट नहीं है
+
+`test_drive` को ऐसा `dsh` CLI चाहिए जो **दूसरा** headless DSH प्रोसेस शुरू कर सके।
+DSH Desktop का `dsh.CMD` launcher केवल `dsh plugin …`, `--dump-config` और `--version`
+की अनुमति देता है; नीति के कारण वह दूसरा headless boot अस्वीकार करता है।
+`config.dshBin` को npm/pnpm से स्थापित `dsh` CLI (या सामान्य Node + dsh JS entry) पर
+सेट करें। अब त्रुटि “cannot parse npm shim” के बजाय यह स्पष्ट कारण बताती है।
+
 ## Configuration (विन्यास)
 
 सभी कुंजियाँ वैकल्पिक हैं (डिफ़ॉल्ट दिखाए गए); अमान्य मान लोड के समय ज़ोर से विफल होते हैं।

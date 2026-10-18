@@ -102,6 +102,14 @@ dsh plugin --profile web add dsh-test-drive
 
 Prebuilt packages need no build allowance. Restart the profile, then use `test_drive` / `/testdrive` from a session.
 
+## DSH Desktop is not a supported test host
+
+`test_drive` needs a `dsh` CLI that can boot a **second** headless DSH process.
+The DSH Desktop launcher (`dsh.CMD`) only permits `dsh plugin …`, `--dump-config`,
+and `--version`; it rejects a second headless boot by policy. Point `config.dshBin`
+at an npm/pnpm-installed `dsh` CLI (or a plain Node + `dsh` JS entry) instead.
+The error now says this explicitly rather than "cannot parse npm shim".
+
 ## Configuration
 
 All keys are optional (defaults shown); invalid values fail loudly at load.
