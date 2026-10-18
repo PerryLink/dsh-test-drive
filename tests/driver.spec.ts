@@ -288,6 +288,10 @@ describe('DshDriver.readNewestSession', () => {
 describe('anchorLocalTarget', () => {
   it('resolves relative path targets against the host cwd', () => {
     expect(anchorLocalTarget('./pkg')).toBe(join(process.cwd(), 'pkg'))
-    expect(anchorLocalTarget('./pkg', '/tmp/session-ws')).toBe('/tmp/session-ws/pkg')
+    // Use the platform's own temp directory: a POSIX literal such as
+    // '/tmp/session-ws' is drive-relative on Windows, where resolve() anchors
+    // it to the current drive (D:\tmp\session-ws), not to a POSIX root.
+    const workspace = join(tmpdir(), 'session-ws')
+    expect(anchorLocalTarget('./pkg', workspace)).toBe(join(workspace, 'pkg'))
   })
 })
