@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.21] - 2026-10-19
+
+### Fixed
+
+- **A stored UNREACHED stage no longer poisons `drive_report` (issue #7).** `UNREACHED` is `{ status: "skipped", attempts: 0 }`, but `StageResultSchema` required `attempts >= 1`; one such record made every run/matrix read fail schema validation. The schema now allows `attempts: 0`; existing poisoned records load again.
+
 ## [0.3.20] - 2026-10-18
 
 ### Changed

@@ -46,7 +46,7 @@ export const StageResultSchema = z.object({
   /** Wall-clock duration of the stage in milliseconds. */
   durationMs: z.number().finite(),
   /** Spawn attempts (the allowBuilds retry is attempt 2). */
-  attempts: z.number().int().min(1),
+  attempts: z.number().int().min(0),
   /** One-line sanitized verdict, e.g. `exit 0 after allowBuilds allowance`. */
   summary: z.string(),
   /** Sanitized output tail (secrets and temp paths redacted). */

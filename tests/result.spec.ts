@@ -112,6 +112,12 @@ describe('durable record schemas', () => {
     expect(() => DriveResultSchema.parse(wrong)).toThrow()
   })
 
+  it('accepts an UNREACHED stage with attempts: 0', () => {
+    const unreached = passResult()
+    unreached.stages.install = { ...unreached.stages.install, status: 'skipped', attempts: 0, summary: 'not reached: earlier stage errored' }
+    expect(DriveResultSchema.parse(unreached).stages.install.attempts).toBe(0)
+  })
+
   it('accepts a matrix record', () => {
     const matrix = {
       schema: RESULT_SCHEMA,
