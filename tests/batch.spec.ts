@@ -84,7 +84,7 @@ describe('startBatchJob through the real registry', () => {
     const harness = await mountHarness({ plugin: false, scripts: MIXED_SCRIPTS })
     const deps = batchDeps(harness)
     const jobId = startBatchJob(deps, ['dsh-a', 'dsh-b'], harness.agent, '/testdrive dsh-a dsh-b')
-    expect(jobId).toMatch(/drive-batch-\d+/u)
+    expect(jobId).toMatch(/drive-batch-[0-9a-f]+/u)
     const snapshot = await harness.ctx.jobs.wait(JobId(String(jobId)), 10_000, harness.session.id)
     expect(snapshot.status).toBe('completed')
     expect(String(snapshot.detail)).toContain('1 pass, 1 fail')

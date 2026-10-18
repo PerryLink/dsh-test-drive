@@ -92,7 +92,7 @@ describe('handleTestdrive', () => {
     const deps = batchDeps(harness)
     const result = handleTestdrive(deps, invocation('dsh-click', harness))
     expect(result.kind).toBe('success')
-    const jobId = JobId((result as { text: string }).text.match(/drive-batch-\d+/u)?.[0] ?? '')
+    const jobId = JobId((result as { text: string }).text.match(/drive-batch-[0-9a-f]+/u)?.[0] ?? '')
     const snapshot = await harness.ctx.jobs.wait(jobId, 10_000, harness.session.id)
     expect(snapshot.status).toBe('completed')
     expect(String(snapshot.detail)).toContain('1 pass')

@@ -288,5 +288,6 @@ describe('DshDriver.readNewestSession', () => {
 describe('anchorLocalTarget', () => {
   it('resolves relative path targets against the host cwd', () => {
     expect(anchorLocalTarget('./pkg')).toBe(join(process.cwd(), 'pkg'))
+    expect(anchorLocalTarget('./pkg', '/tmp/session-ws')).toBe('/tmp/session-ws/pkg')
   })
 })

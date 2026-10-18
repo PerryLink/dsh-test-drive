@@ -40,7 +40,7 @@ Pruebas de instalación y arranque aisladas para complementos de DeepSeek Harnes
 
 Instala, prueba, verifica y limpia en un perfil desechable — tu `~/.dsh` real permanece intacto.
 
-![Demostración de terminal de dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
+![Demostración de terminal de dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-hero.png)
 
 ![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
 

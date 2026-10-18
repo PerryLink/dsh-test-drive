@@ -388,7 +388,7 @@ export class DshDriver {
   }
 }
 
-/** Resolve a relative local path target against the host's invoking directory. */
-export function anchorLocalTarget(target: string): string {
-  return resolve(process.cwd(), target)
+/** Resolve a relative local path target against the session workspace, falling back to the host's invoking directory. */
+export function anchorLocalTarget(target: string, cwd?: string): string {
+  return resolve(cwd ?? process.cwd(), target)
 }

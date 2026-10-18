@@ -7,6 +7,8 @@
  * @module dsh-test-drive/tools
  */
 
+import { mkdir, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { Domain } from '@deepseek-ai/dsh-storage-domain'
@@ -326,11 +328,27 @@ export function allTools(services: ToolServices) {
       }
       const result = await services.runner.drive(target, {
         signal: exec.signal,
+        ...exec.agent?.session.header.cwd === undefined ? {} : { cwd: exec.agent.session.header.cwd },
         ...headlessTask === undefined || headlessTask === null ? {} : { headlessTask },
         ...capability === undefined ? {} : { capability },
       })
       // The tool contract declares `resolved` as an object-or-null field; the
       // domain record keeps it optional, so project it before returning.
+      const cwd = exec.agent?.session.header.cwd
+      if (cwd !== undefined) {
+        try {
+          const dir = join(cwd, '.dsh-test-drive')
+          await mkdir(dir, { recursive: true })
+          const base = join(dir, result.run.runId)
+          const markdown = `${base}.md`
+          const json = `${base}.json`
+          await writeFile(markdown, renderDriveResult(result as unknown as Parameters<typeof renderDriveResult>[0]), 'utf8')
+          await writeFile(json, JSON.stringify(result, null, 2), 'utf8')
+          services.ctx.logger.info(`dsh-test-drive: reports written to ${markdown} and ${json}`)
+        } catch (error) {
+          services.ctx.logger.warn(`dsh-test-drive: could not write report files: ${String(error)}`)
+        }
+      }
       return { ...result, target: { ...result.target, resolved: result.target.resolved ?? null } }
     },
   })

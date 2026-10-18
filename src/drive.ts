@@ -72,6 +72,8 @@ export interface DriveOptions {
   headlessTask?: string | undefined
   /** Optional capability assertion for this drive; overrides the config block entirely. */
   capability?: CapabilitySpec | undefined
+  /** Session workspace used to anchor a relative local path target. */
+  cwd?: string | undefined
 }
 
 /** Derive one line of batch progress from a settled result. */
@@ -159,7 +161,7 @@ export class DriveRunner {
     const spec = sanitizeTarget(target)
     if (spec.length === 0) throw new Error('dsh-test-drive: target must be a non-empty string')
     const kind = classifyTarget(spec)
-    const addSpec = kind === 'path' ? anchorLocalTarget(spec) : spec
+    const addSpec = kind === 'path' ? anchorLocalTarget(spec, options.cwd) : spec
 
     const workspace: TempWorkspace = await temp.create(config.profileName)
     const base = { home: workspace.home, cwd: workspace.workspace, storeDir: workspace.store, signal: options.signal }

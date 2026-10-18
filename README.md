@@ -42,7 +42,7 @@ Isolated install-and-smoke test drives for DeepSeek Harness plugins.
 
 Install, smoke, verify, and clean up in a throwaway profile — your real `~/.dsh` stays untouched.
 
-![Terminal demo of dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
+![Terminal demo of dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-hero.png)
 
 ![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
 

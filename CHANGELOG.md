@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.19] - 2026-10-18
+
+### Changed
+
+- Add a 1280×720 hero and a 960×540, 4-second terminal GIF rendered from the test run; `screenshots.json` is an object array and `capture.json` records the command.
+
+## [0.3.18] - 2026-10-18
+
+### Added
+
+- **A completed drive writes its Markdown and JSON reports into the session workspace.** `test_drive` writes `.dsh-test-drive/<runId>.md` and `.json` under `exec.agent.session.header.cwd` and logs their absolute paths; a write failure is logged and never fails the drive (C3).
+
+## [0.3.17] - 2026-10-18
+
+### Fixed
+
+- **A relative local-path target is anchored to the session workspace.**
+- Compatibility: `engines.dsh` -> `>=0.2.1-0 <0.3.0`; devDependencies to `0.2.1-rc.2`; add `dsh-working-directory`; pin `zod` 4.4.3; `dshVersions` includes rc.2. `anchorLocalTarget` fell back to `process.cwd()`; the tool now passes `exec.agent.session.header.cwd` and the batch path keeps the process fallback (C4).
+
 All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),

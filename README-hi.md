@@ -40,7 +40,7 @@ DeepSeek Harness प्लगइन के लिए पृथक इंस्�
 
 एक डिस्पोज़ेबल प्रोफ़ाइल में इंस्टॉल, स्मोक, सत्यापन और सफ़ाई करें — आपका असली `~/.dsh` अछूता रहता है।
 
-![dsh-test-drive का टर्मिनल डेमो: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.png)
+![dsh-test-drive का टर्मिनल डेमो: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-hero.png)
 
 ![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
 

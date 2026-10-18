@@ -1,5 +1,14 @@
-{
-  "screenshots": [
-    "docs/assets/dsh-test-drive-demo.png"
-  ]
-}
+[
+  {
+    "path": "docs/assets/dsh-test-drive-hero.png",
+    "kind": "hero",
+    "alt": "dsh-test-drive terminal output",
+    "caption": "Real dsh-test-drive test run; 131 tests passed."
+  },
+  {
+    "path": "docs/assets/dsh-test-drive-demo.gif",
+    "kind": "demo",
+    "alt": "Animated dsh-test-drive terminal session",
+    "caption": "The same run, assembled line by line."
+  }
+]
