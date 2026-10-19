@@ -395,6 +395,22 @@ test_drive({ target: "dsh-click" })
 
 *来源 `README.md:153-163,174-211; tests/drive.spec.ts:73-101; src/report.ts:34-55`*
 
+#### 失败分支
+
+**输入**
+
+~~~text
+{"target":"   "}
+~~~
+
+**输出**
+
+~~~text
+isError=true; error.message=dsh-test-drive: target must be a non-empty string
+~~~
+
+*来源 `plugins/dsh-test-drive/src/tools.ts:297-299 (blank target check); exercised through plugins/dsh-test-drive/tests/harness.ts`*
+
 #### 简短示例
 
 

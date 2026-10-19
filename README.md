@@ -144,6 +144,22 @@ test_drive({ target: "dsh-click" })
 
 *Observed from `README.md:153-163,174-211; tests/drive.spec.ts:73-101; src/report.ts:34-55`*
 
+#### Failure branch
+
+**Input**
+
+~~~text
+{"target":"   "}
+~~~
+
+**Output**
+
+~~~text
+isError=true; error.message=dsh-test-drive: target must be a non-empty string
+~~~
+
+*Observed from `plugins/dsh-test-drive/src/tools.ts:297-299 (blank target check); exercised through plugins/dsh-test-drive/tests/harness.ts`*
+
 #### Brief examples
 
 
