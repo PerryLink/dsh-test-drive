@@ -52,9 +52,10 @@ dsh plugin --profile web remove dsh-test-drive  # 卸载
 
 在一次性 profile 中完成安装、冒烟、验证与清理——绝不触碰你真实的 `~/.dsh`。
 
-![dsh-test-drive 终端演示：dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-hero.png)
+![dsh-test-drive 工作流图：问题 → 封存来源 → 报告。](docs/assets/dsh-test-drive-flow.svg)
 
-![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+*工作流概览：问题 → 封存来源 → 报告。下面的示例使用实际命令面。*
+
 
 *同一次运行，动图版。*
 
@@ -359,3 +360,16 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 ### 从 DSH Desktop 市场安装
 
 所有 PerryLink 插件均可在 DSH Desktop 内置市场中浏览：**市场 → 来源 → 添加来源 → 粘贴** `https://perrylink-dsh-catalog.perrylink.workers.dev/catalog-source.json` **→ 选中**。安装仍需通过市场的 npm 身份校验与你的确认。
+
+### 示例
+
+以下为插件真实入口；安装后调用一个即可。
+
+#### 详细示例
+
+- `/testdrive`
+
+#### 简短示例
+
+
+

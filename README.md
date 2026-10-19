@@ -54,11 +54,11 @@ Isolated install-and-smoke test drives for DeepSeek Harness plugins.
 
 Install, smoke, verify, and clean up in a throwaway profile — your real `~/.dsh` stays untouched.
 
-![Terminal demo of dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-hero.png)
+![Workflow diagram for dsh-test-drive: question → sealed sources → report.](docs/assets/dsh-test-drive-flow.svg)
 
-![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+*Workflow overview: question → sealed sources → report. The examples below use the real command surface.*
 
-*The same run, animated.*
+
 
 ## Compatibility
 
@@ -109,6 +109,18 @@ The DSH Desktop launcher (`dsh.CMD`) only permits `dsh plugin …`, `--dump-conf
 and `--version`; it rejects a second headless boot by policy. Point `config.dshBin`
 at an npm/pnpm-installed `dsh` CLI (or a plain Node + `dsh` JS entry) instead.
 The error now says this explicitly rather than "cannot parse npm shim".
+
+### Examples
+
+These are the plugin's real entry points; install once, then call one.
+
+#### Detailed example
+
+- `/testdrive`
+
+#### Brief examples
+
+
 
 ## Configuration
 

@@ -52,9 +52,10 @@ Testes isolados de instalação e inicialização para plugins do DeepSeek Harne
 
 Instale, teste, verifique e limpe em um perfil descartável — seu `~/.dsh` real permanece intocado.
 
-![Demonstração de terminal do dsh-test-drive: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-hero.png)
+![Diagrama de fluxo de dsh-test-drive: pergunta → fontes seladas → relatório.](docs/assets/dsh-test-drive-flow.svg)
 
-![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+*Visão geral do fluxo: pergunta → fontes seladas → relatório. Os exemplos abaixo usam a superfície real de comandos.*
+
 
 *A mesma execução, animada.*
 
@@ -360,3 +361,16 @@ Este projeto faz parte da família de plugins do DeepSeek Harness da [PerryLink]
 ### Instalar a partir do mercado do DSH Desktop
 
 Todos os plugins PerryLink podem ser explorados no mercado integrado do DSH Desktop: **Market → Sources → add source → colar** `https://perrylink-dsh-catalog.perrylink.workers.dev/catalog-source.json` **→ selecionar**. A instalação continua passando pela verificação de identidade npm do mercado e pela sua confirmação.
+
+### Exemplos
+
+São os pontos de entrada reais; instale e chame um.
+
+#### Exemplo detalhado
+
+- `/testdrive`
+
+#### Exemplos breves
+
+
+

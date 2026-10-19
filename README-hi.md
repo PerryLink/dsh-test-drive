@@ -52,9 +52,10 @@ DeepSeek Harness प्लगइन के लिए पृथक इंस्�
 
 एक डिस्पोज़ेबल प्रोफ़ाइल में इंस्टॉल, स्मोक, सत्यापन और सफ़ाई करें — आपका असली `~/.dsh` अछूता रहता है।
 
-![dsh-test-drive का टर्मिनल डेमो: dsh-test-drive — one isolated install-and-smoke drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-hero.png)
+![dsh-test-drive कार्यप्रवाह आरेख: प्रश्न → सीलबंद स्रोत → रिपोर्ट।](docs/assets/dsh-test-drive-flow.svg)
 
-![Animated terminal demo of dsh-test-drive](https://raw.githubusercontent.com/PerryLink/dsh-test-drive/main/docs/assets/dsh-test-drive-demo.gif)
+*कार्यप्रवाह: प्रश्न → सीलबंद स्रोत → रिपोर्ट। नीचे के उदाहरण वास्तविक कमांड सतह का उपयोग करते हैं।*
+
 
 *वही रन, एनिमेटेड।*
 
@@ -360,3 +361,16 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 ### DSH Desktop मार्केट से इंस्टॉल करें
 
 सभी PerryLink प्लगइन DSH Desktop के बिल्ट-इन मार्केट में देखे जा सकते हैं: **Market → Sources → add source → पेस्ट करें** `https://perrylink-dsh-catalog.perrylink.workers.dev/catalog-source.json` **→ चुनें**। इंस्टॉलेशन मार्केट के npm-identity सत्यापन और आपकी पुष्टि से ही होता है।
+
+### उदाहरण
+
+ये वास्तविक प्रवेश बिंदु हैं; इंस्टॉल के बाद एक चलाएँ।
+
+#### विस्तृत उदाहरण
+
+- `/testdrive`
+
+#### संक्षिप्त उदाहरण
+
+
+
