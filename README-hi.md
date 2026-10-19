@@ -368,7 +368,33 @@ pnpm run build && pnpm run verify:self-contained && pnpm run verify:artifacts &&
 
 #### विस्तृत उदाहरण
 
-- `/testdrive`
+**कमांड**
+
+~~~sh
+test_drive({ target: "dsh-click" })
+~~~
+
+**आउटपुट**
+
+~~~text
+# Test drive tdr_0b9b6e6a61e3e80cc4620f2e
+
+- Target: `dsh-click` (npm)
+- Verdict: ✅ pass — install, patch, boot, task, and uninstall all verified
+- Installed: dsh-click@0.2.0
+- Isolation: throwaway DSH_HOME + workspace + pnpm store; host profile untouched
+
+| Stage | Result | Exit | Duration | Summary |
+|---|---|---|---|---|
+| install | ✅ pass | 0 | 1 ms | install ok (exit 0) |
+| config (--dump-config) | ✅ pass | 0 | 0 ms | patch effective: dsh-click |
+| smoke (headless boot) | ✅ pass | 0 | 0 ms | booted cleanly and the headless task completed |
+| capability | ⏭️ skipped | null | 0 ms | capability assertion disabled (config.capability.enabled is false and no per-drive capability given) |
+| uninstall | ✅ pass | 0 | 0 ms | remove ok (exit 0) |
+| cleanup | ✅ pass | — | — | owned temp root quarantined and removed |
+~~~
+
+*स्रोत `README.md:153-163,174-211; tests/drive.spec.ts:73-101; src/report.ts:34-55`*
 
 #### संक्षिप्त उदाहरण
 
