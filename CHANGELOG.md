@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.23] - 2026-10-22
+
+### Fixed
+
+- The release workflow now skips a version that is already on the registry and
+  treats npm E409 ("cannot publish over previously staged version") as success.
+  v0.3.22 failed with E409 because it had a staged publish; this patch
+  republishes the same code with a re-run-safe workflow.
+
 ## [0.3.22] - 2026-10-19
 
 ### Fixed
