@@ -73,6 +73,15 @@ class MemoryKvUnit implements KvUnit {
     this.medium.tables.get(table)?.delete(key)
   }
 
+  async deleteRecords(table: string, keys: readonly string[]): Promise<void> {
+    this.assertOpen()
+    const records = this.medium.tables.get(table)
+    if (records === undefined) return
+    // Deduplicate and drop only present keys, so an empty or all-missing
+    // batch stays a no-op (the backend contract forbids advancing the stamp).
+    for (const key of new Set(keys)) records.delete(key)
+  }
+
   async setGlobal(value: unknown): Promise<void> {
     this.assertOpen()
     this.medium.global = value

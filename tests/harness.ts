@@ -17,6 +17,7 @@ import type { Agent } from '@deepseek-ai/dsh-agent'
 import AgentRegistry from '@deepseek-ai/dsh-agent'
 import LocalJobRegistry from '@deepseek-ai/dsh-jobs-local'
 import SessionStore, { SessionId, type Session } from '@deepseek-ai/dsh-session'
+import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
 import Storage from '@deepseek-ai/dsh-storage'
 import { DomainFacility } from '@deepseek-ai/dsh-storage-domain'
 import {
@@ -28,6 +29,7 @@ import {
   type SubprocessSpawnSpec,
 } from '@deepseek-ai/dsh-subprocess'
 import LocalSubprocessRuntime from '@deepseek-ai/dsh-subprocess-local'
+import * as NativeToolExecutor from '@deepseek-ai/dsh-tool-executor-native'
 import ToolRuntime from '@deepseek-ai/dsh-tools'
 import type { CommandDefinition, CommandDescriptor } from '@deepseek-ai/dsh-commands'
 import { MemoryStorageBackend } from './helpers/memory-backend.ts'
@@ -227,10 +229,16 @@ export const FAKE_DSH_BIN = '/fake/dsh.js'
 export async function mountHarness(options: HarnessOptions = {}): Promise<Harness> {
   const ctx = new Context()
   await ctx.plugin(SessionStore)
+  // 0.2.2's AgentRegistry injects `sessionProjections`; the host composition
+  // mounts session → session-projection → agent, so mirror that order here.
+  await ctx.plugin(SessionProjectionRegistry)
   const session = ctx.sessions.create(SessionId('dsh-test-drive-harness'))
   session.append('turn/start', { turn: 1 })
   ctx.provide('systemPrompt', { tools: () => () => undefined, section: () => () => undefined } as never)
   await ctx.plugin(ToolRuntime)
+  // 0.2.2's ToolRuntime delegates a raw call batch to a selected executor;
+  // without one, every `tools.execute` rejects as unavailable.
+  await ctx.plugin(NativeToolExecutor)
 
   if (options.jobs !== false) {
     await ctx.plugin(AgentRegistry)

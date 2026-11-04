@@ -12,12 +12,12 @@ import { mountHarness, type Harness, type ScriptedSpawn } from './harness.ts'
 
 /**
  * Brand a synthetic tool-call id without naming the host line's brand: the
- * published `0.1.1-rc.2` line exports `CallId` while host HEAD renamed it to
- * `ToolCallId` — deriving the type from `tools.execute` keeps both typecheck
+ * published lines export `CallId`/`ToolCallId` under different names —
+ * deriving the type from `tools.execute`'s batch input keeps both typecheck
  * rulers green.
  */
-type ToolExecInput = Parameters<Harness['ctx']['tools']['execute']>[0]
-const makeCallId = (id: string): ToolExecInput['callId'] => id as ToolExecInput['callId']
+type ToolCallInput = Parameters<Harness['ctx']['tools']['execute']>[0]['calls'][number]
+const makeCallId = (id: string): ToolCallInput['id'] => id as ToolCallInput['id']
 
 const MANIFEST = JSON.stringify({ name: 'p', private: true, dsh: { profile: { bundles: ['@deepseek-ai/dsh-base', 'dsh-click'] } } })
 const INSTALLED = JSON.stringify({ name: 'dsh-click', version: '0.2.0', dsh: { bundle: { patch: './cordis.patch.yml' } } })
@@ -34,13 +34,16 @@ let callCounter = 0
 
 async function callTool(harness: Harness, name: string, args: unknown): Promise<ToolExecutionResult> {
   callCounter += 1
-  return harness.ctx.tools.execute({
-    callId: makeCallId(`tools-spec-${callCounter}`),
-    name,
-    arguments: args,
+  // The 0.2.2 tool runtime takes a raw `ToolCallBlock` batch and settles one
+  // correlated result per call; arguments travel as the model's JSON string.
+  const batch = await harness.ctx.tools.execute({
+    calls: [{ type: 'tool-call', id: makeCallId(`tools-spec-${callCounter}`), name, arguments: JSON.stringify(args) }],
     agent: harness.agent,
     signal: new AbortController().signal,
   })
+  const settled = batch.results[0]
+  if (settled === undefined) throw new Error(`tool batch settled no result for ${name}`)
+  return settled.result
 }
 
 describe('registration', () => {

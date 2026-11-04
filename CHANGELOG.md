@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- **Host 0.2.2 line support.** devDependencies move from 0.2.1-rc.2 to 0.2.2-rc.1, cordis to 4.1.0 / include 1.1.0 / loader 1.1.0, and schemastery to ~3.19.0 so a single copy resolves against `@deepseek-ai/dsh-llm` 0.2.2. `engines.dsh` appends `>=0.2.2-0 <0.3.0` (append-only), `engines.node` becomes `^22.19.0 || >=24.9.0`, and `dshWorkshop.compatibility.dshVersions` lists `0.2.2-rc.1`.
+- **The tests drive the 0.2.2 batch tool runtime.** The harness mounts `@deepseek-ai/dsh-tool-executor-native` after `ToolRuntime` (0.2.2's `ToolRuntime` delegates a raw `ToolCallBlock` batch to a selected executor) and `SessionProjectionRegistry` between the session store and `AgentRegistry` (0.2.2's `AgentRegistry` injects `sessionProjections`). The tool-call helpers now send `{ calls: [{ type: 'tool-call', id, name, arguments: JSON.stringify(args) }] }` and read `results[0].result`.
+
+### Fixed
+
+- Add `@deepseek-ai/dsh-package-manifest` (0.2.2 `dsh-llm` types import it without declaring it), plus `@deepseek-ai/dsh-tool-executor-native` and `@deepseek-ai/dsh-session-projection` as devDependencies the tests need to publish an executor and the projection registry.
+- `tests/helpers/memory-backend.ts` implements `KvUnit.deleteRecords`: the 0.2.2 storage backend contract gained the batch delete, so the in-memory double must satisfy it.
+
 ## [0.3.24] - 2026-10-24
 
 ### Fixed

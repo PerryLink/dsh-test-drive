@@ -17,12 +17,28 @@ import { VERSION } from '../src/version.ts'
 
 /**
  * Brand a synthetic tool-call id without naming the host line's brand: the
- * published `0.1.1-rc.2` line exports `CallId` while host HEAD renamed it to
- * `ToolCallId` — deriving the type from `tools.execute` keeps both typecheck
+ * published lines export `CallId`/`ToolCallId` under different names —
+ * deriving the type from `tools.execute`'s batch input keeps both typecheck
  * rulers green.
  */
-type ToolExecInput = Parameters<Harness['ctx']['tools']['execute']>[0]
-const makeCallId = (id: string): ToolExecInput['callId'] => id as ToolExecInput['callId']
+type ToolCallInput = Parameters<Harness['ctx']['tools']['execute']>[0]['calls'][number]
+const makeCallId = (id: string): ToolCallInput['id'] => id as ToolCallInput['id']
+
+/**
+ * Execute one tool call through the 0.2.2 batch runtime: the runtime takes a
+ * raw `ToolCallBlock` batch and settles one correlated result per call;
+ * arguments travel as the model's JSON string.
+ */
+async function callTool(harness: Harness, id: string, name: string, args: unknown) {
+  const batch = await harness.ctx.tools.execute({
+    calls: [{ type: 'tool-call', id: makeCallId(id), name, arguments: JSON.stringify(args) }],
+    agent: harness.agent,
+    signal: new AbortController().signal,
+  })
+  const settled = batch.results[0]
+  if (settled === undefined) throw new Error(`tool batch settled no result for ${name}`)
+  return settled.result
+}
 
 const e2e = process.env.DSH_TESTDRIVE_E2E === '1' ? describe : describe.skip
 
@@ -45,13 +61,7 @@ e2e('real CLI', () => {
       config: { headlessTask: 'Reply with exactly: ok' },
     })
     const repoRoot = join(import.meta.dirname, '..')
-    const result = await harness.ctx.tools.execute({
-      callId: makeCallId('e2e-drive'),
-      name: 'test_drive',
-      arguments: { target: repoRoot },
-      agent: harness.agent,
-      signal: new AbortController().signal,
-    })
+    const result = await callTool(harness, 'e2e-drive', 'test_drive', { target: repoRoot })
     expect(result.isError).toBe(false)
     const value = result.value as Record<string, unknown>
     expect(value.schema).toBe('dsh-test-drive/v1')
@@ -82,13 +92,7 @@ e2e('real CLI', () => {
 
   it('leaves nothing behind after a failed install target', async () => {
     const harness: Harness = await mountHarness({ localSubprocess: true })
-    const result = await harness.ctx.tools.execute({
-      callId: makeCallId('e2e-drive-fail'),
-      name: 'test_drive',
-      arguments: { target: 'dsh-package-that-cannot-exist-4f2c9e1' },
-      agent: harness.agent,
-      signal: new AbortController().signal,
-    })
+    const result = await callTool(harness, 'e2e-drive-fail', 'test_drive', { target: 'dsh-package-that-cannot-exist-4f2c9e1' })
     expect(result.isError).toBe(false)
     const value = result.value as Record<string, unknown>
     expect(value.verdict).toBe('fail')
