@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-label="dsh-test-drive install-smoke pipeline">
+<title>dsh-test-drive install → smoke → cleanup pipeline</title>
+<rect width="1200" height="400" rx="18" fill="#ffffff"/>
+<text x="60" y="62" fill="#1f2328" font-family="ui-sans-serif,system-ui,sans-serif" font-size="30" font-weight="700">dsh-test-drive</text>
+<text x="60" y="94" fill="#57606a" font-family="ui-monospace,monospace" font-size="16">dsh plugin add → --dump-config → headless boot → capability → dsh plugin remove → cleanup</text>
+<line x1="60" y1="116" x2="1140" y2="116" stroke="#d0d7de"/>
+<rect x="60" y="145" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="150" y="185" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">dsh plugin add</text>
+<text x="150" y="213" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">throwaway DSH_HOME</text>
+<path d="M246 193h33" stroke="#57606a" stroke-width="3"/>
+<path d="M277 186l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="285" y="145" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="375" y="185" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">--dump-config</text>
+<text x="375" y="213" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">patch layer</text>
+<path d="M471 193h33" stroke="#57606a" stroke-width="3"/>
+<path d="M502 186l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="510" y="145" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="600" y="185" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">headless boot</text>
+<text x="600" y="213" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">FAILED-marker scan</text>
+<path d="M696 193h33" stroke="#57606a" stroke-width="3"/>
+<path d="M727 186l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="735" y="145" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#4B67B4" stroke-width="2"/>
+<text x="825" y="185" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">capability</text>
+<text x="825" y="213" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">tool → session log</text>
+<path d="M921 193h33" stroke="#57606a" stroke-width="3"/>
+<path d="M952 186l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="960" y="145" width="180" height="96" rx="14" fill="#f6f8fa" stroke="#16a34a" stroke-width="2"/>
+<text x="1050" y="185" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">dsh plugin remove</text>
+<text x="1050" y="213" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">quarantine → delete</text>
+<rect x="220" y="268" width="760" height="52" rx="12" fill="#f6f8fa" stroke="#4B67B4" stroke-width="2"/>
+<text x="600" y="301" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="14">test_drive · /testdrive · drive_report → schema: dsh-test-drive/v1</text>
+<text x="60" y="370" fill="#57606a" font-family="ui-monospace,monospace" font-size="13">mkdtemp root · DSH_HOME · npm_config_store_dir · ownership registry · hostHomeTouched: false</text>
+</svg>
