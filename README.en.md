@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-dark.svg">
-  <img src="docs/assets/dsh-test-drive-flow-light.svg" width="100%" alt="dsh-test-drive single-target pipeline: dsh plugin add installs into a throwaway DSH_HOME, --dump-config proves the patch layer, the headless boot scans for FAILED markers, an optional capability stage asserts a named tool was really called, then dsh plugin remove and the quarantine ladder clean up; the host profile is never read or written">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-hero-en-dark.webp">
+  <img src="docs/assets/dsh-test-drive-hero-en-light.webp" width="100%" alt="dsh-test-drive: the plugin name and two value lines on the left; on the right the receipt of one real drive — target dsh-click, run id tdr_0b9b…, the six stages with their status words and durations, an isolation strip naming the throwaway DSH_HOME, working directory and pnpm store while the host profile is never read or written, and the verdict line plus the dsh-test-drive/v1 record outlet">
 </picture>
 
 # dsh-test-drive
@@ -37,6 +37,11 @@ dsh plugin --profile <name> add dsh-test-drive
 ## What it is
 
 `dsh-test-drive` turns "can this plugin even install, and does it boot?" into a six-stage pipeline: `dsh plugin add` into a throwaway `DSH_HOME` → `--dump-config` to prove the bundle patch layer really took effect → a headless boot that scans for loader failure markers → an optional capability assertion (drive the agent to call a named tool or command, then check that the durable session log recorded the invocation and the observed output contains the expected literal) → `dsh plugin remove` → cleanup of the temp roots this plugin owns through the dry-run → quarantine-rename → delete ladder. Every stage carries a status, exit code, duration and a sanitized output tail, and the whole run is one `schema: "dsh-test-drive/v1"` record: `test_drive` for a single target, `/testdrive` for a batch, `drive_report` to read results back.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="dsh-test-drive structure: one owned temp root drawn as a clean-room envelope — inside are the three throwaway sub-roots (home/, workspace/, pnpm-store/) and the vertical five-stage spine install → config → smoke → capability → uninstall; at the floor is the finally drain (dry-run plan → quarantine rename → delete retries) that pass, fail, timeout and abort all go through. Outside on the left are the three entry surfaces, the target kinds and the host profile that is never opened; outside on the right are the dsh-test-drive/v1 record, the ordered verdict rules and the /testdrive batch matrix">
+</picture>
 
 ## Three-step setup
 

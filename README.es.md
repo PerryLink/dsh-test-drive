@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-dark.svg">
-  <img src="docs/assets/dsh-test-drive-flow-light.svg" width="100%" alt="Pipeline de un solo objetivo de dsh-test-drive: dsh plugin add instala en un DSH_HOME desechable, --dump-config demuestra la capa de patch, el arranque headless busca marcadores FAILED, una etapa capability opcional verifica que una herramienta concreta se haya invocado de verdad y después dsh plugin remove y la escalera de cuarentena limpian todo; el perfil anfitrión nunca se lee ni se escribe">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-hero-en-dark.webp">
+  <img src="docs/assets/dsh-test-drive-hero-en-light.webp" width="100%" alt="dsh-test-drive: a la izquierda el nombre del plugin y dos frases de valor; a la derecha el recibo de una prueba real — objetivo dsh-click, id de ejecución tdr_0b9b…, las seis etapas con su estado y duración, la franja de aislamiento (DSH_HOME, directorio de trabajo y pnpm store desechables; el perfil anfitrión con 0 lecturas y 0 escrituras) y la línea de veredicto con el registro dsh-test-drive/v1">
 </picture>
 
 # dsh-test-drive
@@ -37,6 +37,11 @@ dsh plugin --profile <name> add dsh-test-drive
 ## Qué es
 
 `dsh-test-drive` convierte «¿este plugin se instala y arranca?» en un pipeline de seis etapas: `dsh plugin add` dentro de un `DSH_HOME` desechable → `--dump-config` para demostrar que la capa de patch del bundle sí surtió efecto → un arranque headless que busca marcadores de fallo del loader → una aserción de capacidad opcional (llevar al agente a invocar una herramienta o un comando concreto y comprobar que el registro de sesión durable anotó la invocación y que la salida observada contiene el literal esperado) → `dsh plugin remove` → limpieza de las raíces temporales que el plugin posee mediante la escalera dry-run → renombrado a cuarentena → borrado. Cada etapa lleva estado, código de salida, duración y una cola de salida saneada, y la ejecución completa es un único registro `schema: "dsh-test-drive/v1"`: `test_drive` para un objetivo, `/testdrive` para un lote y `drive_report` para releer resultados.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="Estructura de dsh-test-drive: una raíz temporal propia dibujada como sala limpia — dentro están las tres subraíces desechables (home/, workspace/, pnpm-store/) y la columna vertical de cinco etapas install → config → smoke → capability → uninstall; en el suelo está el desagüe finally (plan dry-run → renombrado a cuarentena → reintentos de borrado) por el que pasan pass, fail, tiempo agotado y aborto. Fuera, a la izquierda, las tres superficies de entrada, los tipos de objetivo y el perfil anfitrión que nunca se abre; a la derecha, el registro dsh-test-drive/v1, las reglas de veredicto ordenadas y la matriz de lote de /testdrive">
+</picture>
 
 ## Instalación en tres pasos
 

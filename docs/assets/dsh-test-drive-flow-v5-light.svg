@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="660" viewBox="0 0 1100 660" role="img" aria-label="dsh-test-drive structure: one owned temp root as a clean-room envelope holding three throwaway sub-roots and the five-stage spine (install, config, smoke, capability, uninstall); a finally drain removes the root on every exit path, while the structured record and the ordered verdict rules leave the envelope on the right and the host profile stays outside, never opened">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#f9f6fd"/><stop offset="1" stop-color="#e4eaf8"/></linearGradient>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#16122c" flood-opacity="0.10"/></filter>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.4" markerHeight="6.4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4B67B4"/></marker>
+</defs>
+<rect width="1100" height="660" fill="url(#bg)"/>
+<text x="44" y="56" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="27" font-weight="700">dsh-test-drive</text>
+<text x="44" y="84" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="14">one target → one owned throwaway root → five stages + a finally drain → one record; the host profile never opens</text>
+<rect x="857.0" y="34" width="199.0" height="26" rx="13.0" fill="#f5f2fb"/>
+<text x="869.0" y="51.08" fill="#4B67B4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12">schema: dsh-test-drive/v1</text>
+<line x1="44" y1="104" x2="1056" y2="104" stroke="#dcd8ea" stroke-width="1"/>
+<rect x="44" y="116" width="172" height="184" rx="18" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.5" filter="url(#soft)"/>
+<text x="60" y="140" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" letter-spacing="1.4">ENTER</text>
+<text x="60" y="164" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12.5">test_drive(target)</text>
+<text x="60" y="186" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12.5">/testdrive a b c</text>
+<text x="60" y="208" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12.5">drive_report(id)</text>
+<line x1="60" y1="222" x2="200" y2="222" stroke="#dcd8ea" stroke-width="1"/>
+<text x="60" y="244" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" letter-spacing="1.4">TARGET</text>
+<text x="60" y="268" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12.5">repo · npm</text>
+<text x="60" y="290" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12.5">path · .tgz</text>
+<rect x="44" y="316" width="172" height="268" rx="18" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.5" filter="url(#soft)"/>
+<text x="60" y="340" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" letter-spacing="1.2">STAYS OUTSIDE</text>
+<path d="M65 356 v-8 a9 9 0 0 1 18 0 v8" fill="none" stroke="#4B67B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="60" y="356" width="28" height="22" rx="5" fill="#f5f2fb" stroke="#4B67B4" stroke-width="1.6"/>
+<circle cx="74" cy="366" r="2.6" fill="#4B67B4"/>
+<text x="98" y="366" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="14" font-weight="700">~/.dsh</text>
+<text x="98" y="384" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">host profile</text>
+<line x1="60" y1="404" x2="200" y2="404" stroke="#dcd8ea" stroke-width="1"/>
+<circle cx="66" cy="420" r="3.5" fill="#16a34a"/>
+<text x="78" y="416" fill="#141419" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="12.5">0 reads</text>
+<circle cx="66" cy="442" r="3.5" fill="#16a34a"/>
+<text x="78" y="438" fill="#141419" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="12.5">0 writes</text>
+<text x="60" y="470" fill="#16a34a" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">hostHomeTouched: false</text>
+<text x="60" y="492" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">forwardEnv → names only</text>
+<line x1="60" y1="512" x2="200" y2="512" stroke="#dcd8ea" stroke-width="1"/>
+<text x="60" y="534" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">no %TEMP% scan</text>
+<text x="60" y="556" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">no foreign prefixes</text>
+<path d="M216 240 H226 V253 H246" fill="none" stroke="#4B67B4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr)"/>
+<rect x="236" y="116" width="524" height="468" rx="22" fill="#f5f2fb" stroke="#4B67B4" stroke-width="2" filter="url(#soft)"/>
+<text x="252" y="140" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" letter-spacing="1.2">ONE OWNED TEMP ROOT</text>
+<rect x="574.0" y="126" width="170.0" height="22" rx="11.0" fill="#ffffff"/>
+<text x="584.0" y="140.74" fill="#4B67B4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">mkdtemp · dsh-test-drive-</text>
+<rect x="252" y="160" width="158" height="42" rx="10" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.2"/>
+<text x="264" y="177" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" font-weight="700">home/</text>
+<text x="264" y="194" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">DSH_HOME</text>
+<rect x="417" y="160" width="158" height="42" rx="10" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.2"/>
+<text x="429" y="177" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" font-weight="700">workspace/</text>
+<text x="429" y="194" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">child cwd</text>
+<rect x="582" y="160" width="158" height="42" rx="10" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.2"/>
+<text x="594" y="177" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13" font-weight="700">pnpm-store/</text>
+<text x="594" y="194" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">npm_config_store_dir</text>
+<text x="252" y="218" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">ownership registry · owned prefix · direct child of the OS temp dir</text>
+<line x1="270" y1="265" x2="270" y2="298" stroke="#dcd8ea" stroke-width="1.6"/>
+<line x1="270" y1="322" x2="270" y2="355" stroke="#dcd8ea" stroke-width="1.6"/>
+<line x1="270" y1="379" x2="270" y2="412" stroke="#dcd8ea" stroke-width="1.6"/>
+<line x1="270" y1="436" x2="270" y2="469" stroke="#dcd8ea" stroke-width="1.6"/>
+<rect x="248" y="228" width="500" height="50" rx="12" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.4"/>
+<circle cx="270" cy="253" r="12" fill="#16a34a"/>
+<text x="270" y="257.5" fill="#ffffff" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" text-anchor="middle" font-weight="700">1</text>
+<text x="294" y="249" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13.5" font-weight="700">install</text>
+<text x="294" y="266" fill="#4d5261" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">dsh plugin --profile &lt;p&gt; add &lt;spec&gt;</text>
+<rect x="684.0" y="235" width="48.0" height="20" rx="10.0" fill="#e8f6ee"/>
+<text x="694.0" y="248.91" fill="#16a34a" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">pass</text>
+<text x="732" y="272" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" text-anchor="end">exit 0 · allowBuilds retry</text>
+<rect x="248" y="285" width="500" height="50" rx="12" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.4"/>
+<circle cx="270" cy="310" r="12" fill="#16a34a"/>
+<text x="270" y="314.5" fill="#ffffff" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" text-anchor="middle" font-weight="700">2</text>
+<text x="294" y="306" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13.5" font-weight="700">config</text>
+<text x="294" y="323" fill="#4d5261" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">dsh --profile &lt;p&gt; --dump-config</text>
+<rect x="684.0" y="292" width="48.0" height="20" rx="10.0" fill="#e8f6ee"/>
+<text x="694.0" y="305.91" fill="#16a34a" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">pass</text>
+<text x="732" y="329" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" text-anchor="end">patchEffective · layers[]</text>
+<rect x="248" y="342" width="500" height="50" rx="12" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.4"/>
+<circle cx="270" cy="367" r="12" fill="#b45309"/>
+<text x="270" y="371.5" fill="#ffffff" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" text-anchor="middle" font-weight="700">3</text>
+<text x="294" y="363" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13.5" font-weight="700">smoke</text>
+<text x="294" y="380" fill="#4d5261" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">dsh --profile &lt;p&gt; &quot;&lt;headlessTask&gt;&quot;</text>
+<rect x="663.0" y="349" width="69.0" height="20" rx="10.0" fill="#fdf3e9"/>
+<text x="673.0" y="362.91" fill="#b45309" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">boot-ok</text>
+<text x="732" y="386" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" text-anchor="end">no FAILED markers</text>
+<rect x="248" y="399" width="500" height="50" rx="12" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.4" stroke-dasharray="6 5"/>
+<circle cx="270" cy="424" r="12" fill="#4B67B4"/>
+<text x="270" y="428.5" fill="#ffffff" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" text-anchor="middle" font-weight="700">4</text>
+<text x="294" y="420" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13.5" font-weight="700">capability (optional)</text>
+<text x="294" y="437" fill="#4d5261" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">task → newest session log</text>
+<rect x="656.0" y="406" width="76.0" height="20" rx="10.0" fill="#ece7f9"/>
+<text x="666.0" y="419.91" fill="#4B67B4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">observed</text>
+<text x="732" y="443" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" text-anchor="end">tool/call → tool/result</text>
+<rect x="248" y="456" width="500" height="50" rx="12" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.4"/>
+<circle cx="270" cy="481" r="12" fill="#16a34a"/>
+<text x="270" y="485.5" fill="#ffffff" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="12" text-anchor="middle" font-weight="700">5</text>
+<text x="294" y="477" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13.5" font-weight="700">uninstall</text>
+<text x="294" y="494" fill="#4d5261" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">dsh plugin --profile &lt;p&gt; remove &lt;pkg&gt;</text>
+<rect x="684.0" y="463" width="48.0" height="20" rx="10.0" fill="#e8f6ee"/>
+<text x="694.0" y="476.91" fill="#16a34a" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">pass</text>
+<text x="732" y="500" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11" text-anchor="end">exit 0</text>
+<rect x="248" y="510" width="500" height="66" rx="14" fill="#ffffff" stroke="#dcd8ea" stroke-width="1.2"/>
+<text x="266" y="531" fill="#4B67B4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11.5" font-weight="700">finally · runs on pass · fail · timeout · abort</text>
+<text x="732" y="531" fill="#16a34a" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" text-anchor="end">→ registry empty</text>
+<rect x="266" y="542" width="92.0" height="22" rx="11.0" fill="#faf8fe"/>
+<text x="276" y="556.74" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">dry-run plan</text>
+<line x1="358.0" y1="553" x2="372.0" y2="553" stroke="#8f94a4" stroke-width="1.4" marker-end="url(#arr)"/>
+<rect x="378.0" y="542" width="122.0" height="22" rx="11.0" fill="#faf8fe"/>
+<text x="388.0" y="556.74" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">quarantine rename</text>
+<line x1="500.0" y1="553" x2="514.0" y2="553" stroke="#8f94a4" stroke-width="1.4" marker-end="url(#arr)"/>
+<rect x="520.0" y="542" width="98.0" height="22" rx="11.0" fill="#faf8fe"/>
+<text x="530.0" y="556.74" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">rm ×3 retries</text>
+<path d="M760 200 H772" fill="none" stroke="#4B67B4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="772" y1="200" x2="772" y2="526" stroke="#4B67B4" stroke-width="1.6" opacity="0.5"/>
+<line x1="772" y1="200" x2="786" y2="200" stroke="#4B67B4" stroke-width="1.6" marker-end="url(#arr)"/>
+<line x1="772" y1="376" x2="786" y2="376" stroke="#4B67B4" stroke-width="1.6" marker-end="url(#arr)"/>
+<line x1="772" y1="526" x2="786" y2="526" stroke="#4B67B4" stroke-width="1.6" marker-end="url(#arr)"/>
+<rect x="790" y="116" width="266" height="164" rx="18" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.5" filter="url(#soft)"/>
+<text x="806" y="140" fill="#4B67B4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" letter-spacing="1.1">OUTPUT · ONE RECORD</text>
+<text x="806" y="164" fill="#141419" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="13.5" font-weight="700">DriveResult</text>
+<text x="806" y="186" fill="#4d5261" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11">schema: dsh-test-drive/v1</text>
+<text x="806" y="208" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">stages[] · isolation · verdict</text>
+<text x="806" y="228" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">runs[] · matrices[] · latest</text>
+<text x="806" y="248" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">Markdown · JUnit renderers</text>
+<text x="806" y="268" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">dsh-score / CI consume it</text>
+<rect x="790" y="292" width="266" height="172" rx="18" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.5" filter="url(#soft)"/>
+<text x="806" y="314" fill="#4B67B4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" letter-spacing="1.1">VERDICT · ORDER MATTERS</text>
+<text x="806" y="340" fill="#b42318" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">fail</text>
+<text x="806" y="354" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">install / smoke / capability failure</text>
+<text x="806" y="372" fill="#16a34a" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">pass</text>
+<text x="806" y="386" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">install + patch + clean boot + remove</text>
+<text x="806" y="404" fill="#b45309" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">partial</text>
+<text x="806" y="418" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">installed, a later assurance missing</text>
+<text x="806" y="436" fill="#8f94a4" font-family="'Consolas','SFMono-Regular','Menlo',ui-monospace,monospace" font-size="11.5" font-weight="700">unknown</text>
+<text x="806" y="450" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">nothing decisive ran</text>
+<rect x="790" y="472" width="266" height="112" rx="18" fill="#ffffff" stroke="#e6e2ef" stroke-width="1.5" filter="url(#soft)"/>
+<text x="806" y="496" fill="#4B67B4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11" letter-spacing="1.1">BATCH · /TESTDRIVE</text>
+<text x="806" y="520" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">drive-batch job · serial by default</text>
+<text x="806" y="542" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">rows[] · totals · progress stream</text>
+<text x="806" y="564" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">matrix tdm_… → drive_report reads it</text>
+<line x1="44" y1="600" x2="1056" y2="600" stroke="#dcd8ea" stroke-width="1"/>
+<text x="44" y="620" fill="#4d5261" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">verdictOf() is order-sensitive: install fail → fail · smoke fail → fail · capability failed → fail · then pass · partial · unknown</text>
+<text x="44" y="640" fill="#8f94a4" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC','Source Han Sans SC',sans-serif" font-size="11">argv only, never a shell · credentials stripped (forwardEnv forwards names) · keepTempDirs keeps the root and drops ownership · reports sanitized</text>
+</svg>

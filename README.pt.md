@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-dark.svg">
-  <img src="docs/assets/dsh-test-drive-flow-light.svg" width="100%" alt="Pipeline de um único alvo do dsh-test-drive: dsh plugin add instala em um DSH_HOME descartável, --dump-config comprova a camada de patch, o boot headless varre marcadores FAILED, um estágio capability opcional verifica que uma ferramenta nomeada foi realmente chamada e então dsh plugin remove e a escada de quarentena limpam tudo; o perfil hospedeiro nunca é lido nem gravado">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-hero-en-dark.webp">
+  <img src="docs/assets/dsh-test-drive-hero-en-light.webp" width="100%" alt="dsh-test-drive: à esquerda o nome do plugin e duas frases de valor; à direita o recibo de um teste real — alvo dsh-click, id de execução tdr_0b9b…, as seis etapas com estado e duração, a faixa de isolamento (DSH_HOME, diretório de trabalho e pnpm store descartáveis; o perfil hospedeiro com 0 leituras e 0 gravações) e a linha de veredicto com o registro dsh-test-drive/v1">
 </picture>
 
 # dsh-test-drive
@@ -37,6 +37,11 @@ dsh plugin --profile <name> add dsh-test-drive
 ## O que é
 
 O `dsh-test-drive` transforma «este plugin instala e sobe?» em um pipeline de seis estágios: `dsh plugin add` dentro de um `DSH_HOME` descartável → `--dump-config` para provar que a camada de patch do bundle realmente entrou em vigor → um boot headless que varre marcadores de falha do loader → uma asserção de capacidade opcional (levar o agente a chamar uma ferramenta ou comando nomeado e conferir que o registro de sessão durável anotou a chamada e que a saída observada contém o literal esperado) → `dsh plugin remove` → limpeza das raízes temporárias que o plugin possui pela escada dry-run → renomeação para quarentena → remoção. Cada estágio traz estado, código de saída, duração e uma cauda de saída sanitizada, e a execução inteira é um único registro `schema: "dsh-test-drive/v1"`: `test_drive` para um alvo, `/testdrive` para um lote e `drive_report` para reler resultados.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="Estrutura do dsh-test-drive: uma raiz temporária própria desenhada como sala limpa — dentro estão as três sub-raízes descartáveis (home/, workspace/, pnpm-store/) e a coluna vertical de cinco etapas install → config → smoke → capability → uninstall; no piso está o dreno finally (plano dry-run → renomeação para quarentena → tentativas de remoção) por onde passam pass, fail, timeout e aborto. Fora, à esquerda, as três superfícies de entrada, os tipos de alvo e o perfil hospedeiro que nunca é aberto; à direita, o registro dsh-test-drive/v1, as regras de veredicto ordenadas e a matriz de lote do /testdrive">
+</picture>
 
 ## Instalação em três passos
 

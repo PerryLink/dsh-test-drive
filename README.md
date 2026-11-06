@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-dark.svg">
-  <img src="docs/assets/dsh-test-drive-flow-light.svg" width="100%" alt="dsh-test-drive 的单目标流水线：dsh plugin add 装进一次性 DSH_HOME，--dump-config 核对 patch 层，headless 启动扫描 FAILED 标记，可选 capability 断言具名工具真被调用，最后 dsh plugin remove 并按隔离阶梯清理；宿主 profile 全程不被读写">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-hero-zh-dark.webp">
+  <img src="docs/assets/dsh-test-drive-hero-zh-light.webp" width="100%" alt="dsh-test-drive 配图：左列是插件名与两行价值句；右侧是一次真实实测的回执——目标 dsh-click、运行 id tdr_0b9b…、install、config、smoke、capability、uninstall、cleanup 六段的状态与耗时，隔离条写明一次性 DSH_HOME、工作目录与 pnpm store 且宿主 profile 零读写，底部是 verdict 行与 dsh-test-drive/v1 记录出口">
 </picture>
 
 # dsh-test-drive
@@ -37,6 +37,11 @@ dsh plugin --profile <name> add dsh-test-drive
 ## 它是什么
 
 `dsh-test-drive` 把「这个插件到底装不装得上、启不启得来」变成一条六段流水线：`dsh plugin add` 装进一个一次性 `DSH_HOME` → `--dump-config` 核对 bundle patch 层确实生效 → headless 启动一遍并扫描 loader 失败标记 → 可选地做一次能力断言（让 agent 调用某个具名工具或命令，核对持久会话日志里确实记下了这次调用、观察输出里确实出现期望字面量）→ `dsh plugin remove` → 按 dry-run → 隔离改名 → 删除的阶梯清掉本插件拥有的临时根。每段都带状态、退出码、耗时与脱敏后的输出尾部，最终是一条 `schema: "dsh-test-drive/v1"` 的结构化记录：单目标用 `test_drive`，批量用 `/testdrive`，回看用 `drive_report`。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="dsh-test-drive 结构图：本插件拥有的一个临时根被画成隔离舱——舱内是 home/、workspace/、pnpm-store/ 三个一次性子根与 install → config → smoke → capability → uninstall 五段竖向阶段脊；舱底是 finally 排空闸（dry-run 计划 → 隔离改名 → 删除重试），pass、fail、超时、中止都走这一条。舱外左侧是入口三表面、目标类型与从不被打开的宿主 profile；右侧出舱的是 dsh-test-drive/v1 结构化记录、有序判定规则与 /testdrive 批矩阵">
+</picture>
 
 ## 三步上手
 

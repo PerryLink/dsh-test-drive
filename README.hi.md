@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-dark.svg">
-  <img src="docs/assets/dsh-test-drive-flow-light.svg" width="100%" alt="dsh-test-drive का एकल-लक्ष्य पाइपलाइन: dsh plugin add थ्रोअवे DSH_HOME में इंस्टॉल करता है, --dump-config patch परत सिद्ध करता है, headless boot FAILED मार्कर खोजता है, वैकल्पिक capability चरण जाँचता है कि नामित टूल वास्तव में कॉल हुआ, फिर dsh plugin remove और क्वारंटीन सीढ़ी सफ़ाई करती है; होस्ट प्रोफ़ाइल कभी पढ़ी या लिखी नहीं जाती">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-hero-en-dark.webp">
+  <img src="docs/assets/dsh-test-drive-hero-en-light.webp" width="100%" alt="dsh-test-drive: बाईं ओर प्लगइन का नाम और दो मूल्य-पंक्तियाँ; दाईं ओर एक वास्तविक ड्राइव की रसीद — लक्ष्य dsh-click, रन आईडी tdr_0b9b…, छह चरणों की स्थिति और अवधि, आइसोलेशन पट्टी (थ्रोअवे DSH_HOME, कार्य निर्देशिका, pnpm store; होस्ट प्रोफ़ाइल पर 0 पढ़ना / 0 लिखना) और वर्डिक्ट पंक्ति तथा dsh-test-drive/v1 रिकॉर्ड">
 </picture>
 
 # dsh-test-drive
@@ -37,6 +37,11 @@ dsh plugin --profile <name> add dsh-test-drive
 ## यह क्या है
 
 `dsh-test-drive` «यह प्लगइन इंस्टॉल होता भी है और बूट होता है क्या?» को छह चरणों की पाइपलाइन बना देता है: एक थ्रोअवे `DSH_HOME` में `dsh plugin add` → `--dump-config` से सिद्ध करना कि bundle patch परत वास्तव में लागू हुई → एक headless बूट जो loader विफलता मार्कर खोजता है → वैकल्पिक क्षमता-दावा (agent से किसी नामित टूल या कमांड को कॉल कराना, फिर जाँचना कि टिकाऊ सत्र लॉग में वह कॉल दर्ज है और देखा गया आउटपुट अपेक्षित शब्दशः मान रखता है) → `dsh plugin remove` → dry-run → क्वारंटीन-नामांतरण → हटाने की सीढ़ी से इस प्लगइन की अपनी अस्थायी जड़ों की सफ़ाई। हर चरण में स्थिति, निकास कोड, अवधि और sanitized आउटपुट-पुच्छ होती है, और पूरा रन एक ही `schema: "dsh-test-drive/v1"` रिकॉर्ड होता है: एक लक्ष्य के लिए `test_drive`, बैच के लिए `/testdrive`, और परिणाम देखने के लिए `drive_report`।
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-test-drive-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="dsh-test-drive की संरचना: एक स्वामित्व वाली अस्थायी रूट को क्लीन-रूम लिफ़ाफ़े के रूप में दिखाया गया है — भीतर तीन थ्रोअवे उप-रूट (home/, workspace/, pnpm-store/) और पाँच चरणों की ऊर्ध्वाधर रीढ़ install → config → smoke → capability → uninstall; तल पर finally ड्रेन (dry-run योजना → क्वारंटीन नाम-परिवर्तन → विलोपन पुनःप्रयास) है जिससे pass, fail, टाइमआउट और abort सब गुज़रते हैं। बाईं ओर बाहर तीन प्रवेश सतहें, लक्ष्य प्रकार और वह होस्ट प्रोफ़ाइल है जो कभी नहीं खुलती; दाईं ओर dsh-test-drive/v1 रिकॉर्ड, क्रमबद्ध वर्डिक्ट नियम और /testdrive बैच मैट्रिक्स हैं">
+</picture>
 
 ## तीन चरणों में शुरुआत
 
