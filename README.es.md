@@ -363,7 +363,7 @@ No en silencio. La limpieza se ejecuta en un `finally` en éxito, fallo, timeout
 
 | Superficie | Estado |
 |---|---|
-| Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1` (tag de GitHub, verificado el 2026-09-11: cadena completa de puertas + smoke de instalación de perfil). Líneas npm `0.1.2-rc.1` y `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
+| Harness | DeepSeek Harness `dsh-v0.2.2-rc.4` (tag de GitHub, verificado el 2026-11-18: cadena completa de puertas + smoke de instalación de perfil). Líneas npm `0.1.2-rc.1` y `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
 | Node | `^22.19.0 \|\| >=24.9.0` |
 | Gestor de paquetes | `pnpm@11.7.0` |
 | Plataforma | Windows / macOS / Linux (plugin de host puro, sin mitad de UI) |

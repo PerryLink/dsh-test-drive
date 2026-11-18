@@ -363,7 +363,7 @@ isError=true; error.message=dsh-test-drive: target must be a non-empty string
 
 | सतह | स्थिति |
 |---|---|
-| Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1` (GitHub tag, 2026-09-11 को सत्यापित: पूर्ण गेट शृंखला + profile इंस्टॉल स्मोक)। npm निर्भरता पंक्तियाँ `0.1.2-rc.1` और `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
+| Harness | DeepSeek Harness `dsh-v0.2.2-rc.4` (GitHub tag, 2026-11-18 को सत्यापित: पूर्ण गेट शृंखला + profile इंस्टॉल स्मोक)। npm निर्भरता पंक्तियाँ `0.1.2-rc.1` और `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
 | Node | `^22.19.0 \|\| >=24.9.0` |
 | पैकेज प्रबंधक | `pnpm@11.7.0` |
 | प्लेटफ़ॉर्म | Windows / macOS / Linux (शुद्ध host प्लगइन, कोई UI आधा नहीं) |

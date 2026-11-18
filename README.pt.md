@@ -363,7 +363,7 @@ O `dsh-test-drive` expõe duas ferramentas e um comando, e não entra nas costur
 
 | Superfície | Estado |
 |---|---|
-| Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1` (tag do GitHub, verificado em 2026-09-11: cadeia completa de portões + smoke de instalação de perfil). Linhas npm `0.1.2-rc.1` e `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
+| Harness | DeepSeek Harness `dsh-v0.2.2-rc.4` (tag do GitHub, verificado em 2026-11-18: cadeia completa de portões + smoke de instalação de perfil). Linhas npm `0.1.2-rc.1` e `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
 | Node | `^22.19.0 \|\| >=24.9.0` |
 | Gerenciador de pacotes | `pnpm@11.7.0` |
 | Plataforma | Windows / macOS / Linux (plugin de host puro, sem metade de UI) |

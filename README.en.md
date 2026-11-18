@@ -363,7 +363,7 @@ Not silently. Cleanup runs in a `finally` across success, failure, timeout and a
 
 | Surface | Status |
 |---|---|
-| Harness | DeepSeek Harness `dsh-v0.2.1-alpha.1` (GitHub tag, verified 2026-09-11: full gate chain + profile install smoke). npm dependency lines `0.1.2-rc.1` and `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
+| Harness | DeepSeek Harness `dsh-v0.2.2-rc.4` (GitHub tag, verified 2026-11-18: full gate chain + profile install smoke). npm dependency lines `0.1.2-rc.1` and `0.1.7-rc.2`; `engines.dsh`: `>=0.2.1-0 <0.3.0 \|\| >=0.2.2-0 <0.3.0` |
 | Node | `^22.19.0 \|\| >=24.9.0` |
 | Package manager | `pnpm@11.7.0` |
 | Platform | Windows / macOS / Linux (pure host plugin, no UI half) |
