@@ -9,7 +9,7 @@
 
 **Instalar, arrancar, verificar, desinstalar y limpiar dentro de un perfil desechable: convierte «¿esto siquiera arranca?» en un pipeline reproducible.**
 
-Pruebas de instalación y arranque aisladas para plugins de DeepSeek Harness: cada objetivo recibe su propia raíz `mkdtemp` (un `DSH_HOME` desechable, un directorio de trabajo desechable y un pnpm store redirigido), tu `~/.dsh` real nunca se lee ni se escribe, y el resultado es un registro estructurado que las herramientas posteriores pueden consumir.
+Pruebas de instalación y arranque aisladas para plugins de DeepSeek Harness: cada objetivo recibe su propia raíz `dsh-v0.2.2-rc.4`（2026-11-18）；`mkdtemp` (un `DSH_HOME` desechable, un directorio de trabajo desechable y un pnpm store redirigido), tu `~/.dsh` real nunca se lee ni se escribe, y el resultado es un registro estructurado que las herramientas posteriores pueden consumir.
 
 [Instalar](#instalación-en-tres-pasos) · [Configuración](#configuración) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 

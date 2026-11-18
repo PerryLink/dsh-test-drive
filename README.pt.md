@@ -9,7 +9,7 @@
 
 **Instalar, iniciar, verificar, desinstalar e limpar dentro de um perfil descartável: transforme «isso sequer sobe?» em um pipeline reproduzível.**
 
-Testes isolados de instalação e inicialização para plugins do DeepSeek Harness: cada alvo recebe sua própria raiz `mkdtemp` (um `DSH_HOME` descartável, um diretório de trabalho descartável e um pnpm store redirecionado), seu `~/.dsh` real nunca é lido nem gravado, e o resultado é um registro estruturado que as ferramentas seguintes podem consumir.
+Testes isolados de instalação e inicialização para plugins do DeepSeek Harness: cada alvo recebe sua própria raiz `dsh-v0.2.2-rc.4`（2026-11-18）；`mkdtemp` (um `DSH_HOME` descartável, um diretório de trabalho descartável e um pnpm store redirecionado), seu `~/.dsh` real nunca é lido nem gravado, e o resultado é um registro estruturado que as ferramentas seguintes podem consumir.
 
 [Instalar](#instalação-em-três-passos) · [Configuração](#configuração) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
