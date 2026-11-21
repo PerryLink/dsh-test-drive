@@ -43,6 +43,11 @@ O `dsh-test-drive` transforma «este plugin instala e sobe?» em um pipeline de 
   <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="Estrutura do dsh-test-drive: uma raiz temporária própria desenhada como sala limpa — dentro estão as três sub-raízes descartáveis (home/, workspace/, pnpm-store/) e a coluna vertical de cinco etapas install → config → smoke → capability → uninstall; no piso está o dreno finally (plano dry-run → renomeação para quarentena → tentativas de remoção) por onde passam pass, fail, timeout e aborto. Fora, à esquerda, as três superfícies de entrada, os tipos de alvo e o perfil hospedeiro que nunca é aberto; à direita, o registro dsh-test-drive/v1, as regras de veredicto ordenadas e a matriz de lote do /testdrive">
 </picture>
 
+![dsh-test-drive: execução real de terminal](docs/assets/dsh-test-drive-demo.gif)
+
+*Repetição animada de uma execução real registrada neste repositório.*
+
+
 ## Instalação em três passos
 
 1. **Instalar** (dois canais):

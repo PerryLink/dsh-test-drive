@@ -43,6 +43,11 @@ dsh plugin --profile <name> add dsh-test-drive
   <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="dsh-test-drive की संरचना: एक स्वामित्व वाली अस्थायी रूट को क्लीन-रूम लिफ़ाफ़े के रूप में दिखाया गया है — भीतर तीन थ्रोअवे उप-रूट (home/, workspace/, pnpm-store/) और पाँच चरणों की ऊर्ध्वाधर रीढ़ install → config → smoke → capability → uninstall; तल पर finally ड्रेन (dry-run योजना → क्वारंटीन नाम-परिवर्तन → विलोपन पुनःप्रयास) है जिससे pass, fail, टाइमआउट और abort सब गुज़रते हैं। बाईं ओर बाहर तीन प्रवेश सतहें, लक्ष्य प्रकार और वह होस्ट प्रोफ़ाइल है जो कभी नहीं खुलती; दाईं ओर dsh-test-drive/v1 रिकॉर्ड, क्रमबद्ध वर्डिक्ट नियम और /testdrive बैच मैट्रिक्स हैं">
 </picture>
 
+![dsh-test-drive का असली टर्मिनल रन](docs/assets/dsh-test-drive-demo.gif)
+
+*इस रिपॉज़िटरी में दर्ज असली रन का एनिमेटेड रीप्ले।*
+
+
 ## तीन चरणों में शुरुआत
 
 1. **इंस्टॉल करें** (दो चैनल):

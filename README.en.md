@@ -181,6 +181,10 @@ Verdict rules: an install failure, a boot failure (`smoke.fail`), or a capabilit
 
 ### Examples
 
+![dsh-test-drive: real terminal run](docs/assets/dsh-test-drive-demo.gif)
+
+*Animated replay of a real run recorded in this repository.*
+
 These are the plugin's real entry points; install once, then call one.
 
 **Detailed example** — command `test_drive`, input:

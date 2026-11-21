@@ -43,6 +43,11 @@ dsh plugin --profile <name> add dsh-test-drive
   <img src="docs/assets/dsh-test-drive-flow-v5-light.svg" width="100%" alt="Estructura de dsh-test-drive: una raíz temporal propia dibujada como sala limpia — dentro están las tres subraíces desechables (home/, workspace/, pnpm-store/) y la columna vertical de cinco etapas install → config → smoke → capability → uninstall; en el suelo está el desagüe finally (plan dry-run → renombrado a cuarentena → reintentos de borrado) por el que pasan pass, fail, tiempo agotado y aborto. Fuera, a la izquierda, las tres superficies de entrada, los tipos de objetivo y el perfil anfitrión que nunca se abre; a la derecha, el registro dsh-test-drive/v1, las reglas de veredicto ordenadas y la matriz de lote de /testdrive">
 </picture>
 
+![dsh-test-drive: ejecución real de terminal](docs/assets/dsh-test-drive-demo.gif)
+
+*Repetición animada de una ejecución real registrada en este repositorio.*
+
+
 ## Instalación en tres pasos
 
 1. **Instalar** (dos canales):

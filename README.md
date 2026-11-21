@@ -36,6 +36,10 @@ dsh plugin --profile <name> add dsh-test-drive
 
 ## 它是什么
 
+![dsh-test-drive 真实终端运行](docs/assets/dsh-test-drive-demo.gif)
+
+*本仓库一次真实运行的动图回放。*
+
 `dsh-test-drive` 把「这个插件到底装不装得上、启不启得来」变成一条六段流水线：`dsh plugin add` 装进一个一次性 `DSH_HOME` → `--dump-config` 核对 bundle patch 层确实生效 → headless 启动一遍并扫描 loader 失败标记 → 可选地做一次能力断言（让 agent 调用某个具名工具或命令，核对持久会话日志里确实记下了这次调用、观察输出里确实出现期望字面量）→ `dsh plugin remove` → 按 dry-run → 隔离改名 → 删除的阶梯清掉本插件拥有的临时根。每段都带状态、退出码、耗时与脱敏后的输出尾部，最终是一条 `schema: "dsh-test-drive/v1"` 的结构化记录：单目标用 `test_drive`，批量用 `/testdrive`，回看用 `drive_report`。
 
 <picture>
