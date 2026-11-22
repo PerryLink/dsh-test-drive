@@ -9,7 +9,9 @@
 
 **Instalar, iniciar, verificar, desinstalar e limpar dentro de um perfil descartável: transforme «isso sequer sobe?» em um pipeline reproduzível.**
 
-Testes isolados de instalação e inicialização para plugins do DeepSeek Harness: cada alvo recebe sua própria raiz `dsh-v0.2.2-rc.4`（2026-11-18）；`mkdtemp` (um `DSH_HOME` descartável, um diretório de trabalho descartável e um pnpm store redirecionado), seu `~/.dsh` real nunca é lido nem gravado, e o resultado é um registro estruturado que as ferramentas seguintes podem consumir.
+Testes isolados de instalação e inicialização para plugins do DeepSeek Harness: cada alvo recebe sua própria raiz, `mkdtemp` (um `DSH_HOME` descartável, um diretório de trabalho descartável e um pnpm store redirecionado), seu `~/.dsh` real nunca é lido nem gravado, e o resultado é um registro estruturado que as ferramentas seguintes podem consumir.
+
+Última verificação: DeepSeek Harness `dsh-v0.2.3-alpha.1` (2026-11-22).
 
 [Instalar](#instalação-em-três-passos) · [Configuração](#configuração) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
@@ -46,7 +48,6 @@ O `dsh-test-drive` transforma «este plugin instala e sobe?» em um pipeline de 
 ![dsh-test-drive: execução real de terminal](docs/assets/dsh-test-drive-demo.gif)
 
 *Repetição animada de uma execução real registrada neste repositório.*
-
 
 ## Instalação em três passos
 

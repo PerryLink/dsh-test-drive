@@ -9,7 +9,9 @@
 
 **在一次性 profile 里装、启动、断言、卸载、清理——把「装一下看看能不能跑」变成可复现的流水线。**
 
-面向 DeepSeek Harness 插件的隔离式安装冒烟实测：每个目标独占一个 `dsh-v0.2.2-rc.4`（2026-11-18）；`mkdtemp` 根（一次性 `DSH_HOME`、一次性工作目录、重定向的 pnpm store），你真实的 `~/.dsh` 从头到尾不被读写，结果落成下游可直接消费的结构化记录。
+面向 DeepSeek Harness 插件的隔离式安装冒烟实测：每个目标独占一个、`mkdtemp` 根（一次性 `DSH_HOME`、一次性工作目录、重定向的 pnpm store），你真实的 `~/.dsh` 从头到尾不被读写，结果落成下游可直接消费的结构化记录。
+
+最近一次核验：DeepSeek Harness `dsh-v0.2.3-alpha.1`（2026-11-22）。
 
 [安装](#三步上手) · [配置](#配置) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 

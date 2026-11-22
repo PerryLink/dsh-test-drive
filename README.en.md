@@ -9,7 +9,9 @@
 
 **Install, boot, assert, uninstall, clean up inside a throwaway profile — turn "does it even run?" into a reproducible pipeline.**
 
-Isolated install-and-smoke test drives for DeepSeek Harness plugins: every target gets its own `dsh-v0.2.2-rc.4`（2026-11-18）；`mkdtemp` root (a throwaway `DSH_HOME`, a throwaway working directory, a redirected pnpm store), your real `~/.dsh` is never read or written, and the result is a structured record downstream tools can consume.
+Isolated install-and-smoke test drives for DeepSeek Harness plugins: every target gets its own, `mkdtemp` root (a throwaway `DSH_HOME`, a throwaway working directory, a redirected pnpm store), your real `~/.dsh` is never read or written, and the result is a structured record downstream tools can consume.
+
+Last verified on DeepSeek Harness `dsh-v0.2.3-alpha.1` (2026-11-22).
 
 [Install](#three-step-setup) · [Configuration](#configuration) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
