@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Test Drive",
+    "description": "Isolated install-and-smoke test drives for DeepSeek Harness plugins: every target gets its own, mkdtemp root (a throwaway DSHHOME, a throwaway working directory, a redirected pnpm store), your real /.dsh is never read or written, and the result is a structured record downstream tools can consume."
+  }
+}

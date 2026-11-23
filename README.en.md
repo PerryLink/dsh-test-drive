@@ -7,6 +7,8 @@
 
 # dsh-test-drive
 
+Current version `0.3.29`.
+
 **Install, boot, assert, uninstall, clean up inside a throwaway profile — turn "does it even run?" into a reproducible pipeline.**
 
 Isolated install-and-smoke test drives for DeepSeek Harness plugins: every target gets its own, `mkdtemp` root (a throwaway `DSH_HOME`, a throwaway working directory, a redirected pnpm store), your real `~/.dsh` is never read or written, and the result is a structured record downstream tools can consume.
